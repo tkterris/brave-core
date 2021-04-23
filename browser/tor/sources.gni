@@ -1,0 +1,41 @@
+# Copyright (c) 2020 The Brave Authors. All rights reserved.
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this file,
+# You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+
+import("//brave/components/tor/buildflags/buildflags.gni")
+import("//brave/browser/translate/buildflags/buildflags.gni")
+
+brave_browser_tor_sources = []
+
+brave_browser_tor_deps = []
+
+if (enable_tor) {
+  brave_browser_tor_sources += [
+    "//brave/browser/tor/onion_location_navigation_throttle_delegate.cc",
+    "//brave/browser/tor/onion_location_navigation_throttle_delegate.h",
+    "//brave/browser/tor/tor_profile_manager.cc",
+    "//brave/browser/tor/tor_profile_manager.h",
+    "//brave/browser/tor/tor_profile_service_factory.h",
+  ]
+
+  brave_browser_tor_deps += [
+    "//base",
+    "//brave/browser/tor:tor_impl",
+    "//brave/browser/translate/buildflags",
+    "//brave/common",
+    "//brave/components/tor",
+    "//chrome/browser/ui",
+    "//chrome/common",
+    "//components/keyed_service/content",
+    "//components/prefs",
+    "//components/safe_browsing/core/common",
+    "//content/public/browser",
+    "//third_party/blink/public/common",
+  ]
+
+  if (enable_brave_translate_extension) {
+    brave_browser_tor_deps += [ "//components/translate/core/browser" ]
+  }
+}

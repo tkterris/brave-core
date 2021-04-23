@@ -19,7 +19,6 @@ source_set("unittests") {
     "//base/test:test_support",
     "//brave/browser",
     "//brave/browser/net:net",
-    "//brave/browser/tor",
     "//brave/components/ipfs",
     "//brave/components/tor/buildflags",
     "//chrome/test:test_support",
@@ -52,7 +51,6 @@ source_set("browsertests") {
     deps = [
       "//base/test:test_support",
       "//brave/browser",
-      "//brave/browser/tor",
       "//brave/common:common",
       "//brave/common:pref_names",
       "//brave/components/ipfs",

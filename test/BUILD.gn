@@ -794,7 +794,6 @@ if (!is_android) {
       "//brave/browser/net",
       "//brave/browser/profiles",
       "//brave/browser/themes",
-      "//brave/browser/tor",
       "//brave/browser/ui",
       "//brave/browser/ui/tabs",
       "//brave/common:network_constants",

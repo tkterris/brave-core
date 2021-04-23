@@ -29,6 +29,28 @@ source_set("version_info") {
   ]
 }
 
+source_set("browser_process") {
+  visibility = [
+    "//brave/browser/*",
+    "//chrome/browser/*",
+  ]
+
+  sources = [
+    "brave_browser_process.h"
+  ]
+
+  deps = [
+    "//brave/components/brave_ads/browser/buildflags",
+    "//brave/components/brave_referrals/buildflags",
+    "//brave/components/greaselion/browser/buildflags",
+    "//brave/components/ipfs/buildflags",
+    "//brave/components/speedreader",
+    "//brave/components/tor/buildflags",
+    "//chrome/browser:browser_process",
+    "//extensions/buildflags",
+  ]
+}
+
 group("browser") {
   visibility = [
     "//brave:browser_dependencies",

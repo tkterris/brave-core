@@ -2,56 +2,23 @@ import("//brave/components/brave_ads/browser/buildflags/buildflags.gni")
 import("//brave/components/tor/buildflags/buildflags.gni")
 import("//extensions/buildflags/buildflags.gni")
 
-source_set("tor") {
-  # Remove when https://github.com/brave/brave-browser/issues/10655 is resolved
-  check_includes = false
-  visibility = [
-    ":*",
-    "//brave/browser",
-    "//brave/browser/decentralized_dns/test:unit_tests",
-    "//brave/browser/ipfs/test:*",
-    "//brave/browser/profiles",
-    "//brave/browser/ui",
-    "//brave/test:*",
-    "//chrome/browser",
+source_set("tor_impl") {
+  visibility = [ "//chrome/browser" ]
+
+  sources = [
+    "tor_profile_service_factory.cc",
   ]
 
-  if (enable_tor) {
-    sources = [
-      "onion_location_navigation_throttle_delegate.cc",
-      "onion_location_navigation_throttle_delegate.h",
-      "tor_profile_manager.cc",
-      "tor_profile_manager.h",
-      "tor_profile_service_factory.cc",
-      "tor_profile_service_factory.h",
-    ]
-
-    deps = [
-      "//base",
-      "//brave/browser/translate/buildflags",
-      "//brave/common:pref_names",
-      "//brave/components/brave_webtorrent/browser/buildflags",
-      "//brave/components/tor",
-      "//brave/components/tor:pref_names",
-      "//chrome/common",
-      "//components/keyed_service/content",
-      "//components/safe_browsing/core/common:safe_browsing_prefs",
-      "//components/translate/core/browser",
-      "//content/public/browser",
-      "//third_party/blink/public/common",
-    ]
-
-    # Below dep list are not directly used tor target.
-    # Only added to fix intermittent build failure.
-    # Most of the case comes from including brave_browser_process_impl.h`
-    # headers. That header includes some buildflags but sometimes they are
-    # not generated before evaluating tor target.
-    deps += [
-      "//brave/components/brave_referrals/buildflags",
-      "//brave/components/greaselion/browser/buildflags",
-      "//brave/components/speedreader:buildflags",
-    ]
-  }
+  deps = [
+    "//base",
+    "//brave/browser:browser_process",
+    "//brave/components/tor",
+    "//chrome/browser:browser_process",
+    "//chrome/common",
+    "//components/keyed_service/content",
+    "//components/prefs",
+    "//content/public/browser",
+  ]
 }
 
 source_set("unit_tests") {
@@ -65,7 +32,6 @@ source_set("unit_tests") {
     deps = [
       "//base",
       "//base/test:test_support",
-      "//brave/browser/tor",
       "//brave/browser/translate/buildflags",
       "//brave/common:pref_names",
       "//brave/components/brave_webtorrent/browser/buildflags",
@@ -99,7 +65,6 @@ source_set("browser_tests") {
       "//base",
       "//brave/app:brave_generated_resources_grit",
       "//brave/browser",
-      "//brave/browser/tor",
       "//brave/browser/ui",
       "//brave/common",
       "//brave/components/ipfs/buildflags",

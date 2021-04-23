@@ -14,6 +14,8 @@
 #include "chrome/browser/profiles/profile_observer.h"
 #include "chrome/browser/ui/browser_list_observer.h"
 
+class Profile;
+
 class TorProfileManager : public BrowserListObserver, public ProfileObserver {
  public:
   static TorProfileManager& GetInstance();

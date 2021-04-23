@@ -53,8 +53,4 @@ source_set("unit_tests") {
     "//testing/gmock",
     "//testing/gtest",
   ]
-
-  if (enable_tor) {
-    deps += [ "//brave/browser/tor" ]
-  }
 }  # source_set("unit_tests")

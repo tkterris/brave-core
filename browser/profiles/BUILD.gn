@@ -42,7 +42,7 @@ source_set("profiles") {
     "//brave/components/content_settings/core/browser",
     "//brave/components/decentralized_dns/buildflags",
     "//brave/components/ipfs/buildflags",
-    "//brave/components/tor",
+    "//brave/components/tor:constants",
     "//brave/content:browser",
     "//chrome/common",
     "//components/gcm_driver:gcm_buildflags",
@@ -57,10 +57,6 @@ source_set("profiles") {
 
   if (use_gcm_from_platform) {
     deps += [ "//brave/browser/gcm_driver" ]
-  }
-
-  if (enable_tor) {
-    deps += [ "//brave/browser/tor" ]
   }
 }
 
@@ -78,7 +74,7 @@ source_set("util") {
     "//brave/common",
     "//brave/components/ntp_background_images/common",
     "//brave/components/search_engines",
-    "//brave/components/tor/buildflags",
+    "//brave/components/tor",
     "//components/prefs",
     "//content/public/browser",
   ]
