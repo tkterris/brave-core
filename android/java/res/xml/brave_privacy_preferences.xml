@@ -6,64 +6,80 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <org.chromium.components.browser_ui.settings.ChromeBaseCheckBoxPreference
-        android:key="close_tabs_on_exit"
-        android:title="@string/close_tabs_on_exit_title"
-        android:summary="@string/close_tabs_on_exit_summary"
-        android:defaultValue="false" />
-    <org.chromium.components.browser_ui.settings.ChromeBaseCheckBoxPreference
-        android:key="send_p3a_analytics"
-        android:title="@string/send_p3a_analytics_title"
-        android:summary="@string/send_p3a_analytics_summary"
-        android:defaultValue="false" />
-    <org.chromium.components.browser_ui.settings.ChromeBaseCheckBoxPreference
-        android:key="httpse"
-        android:title="@string/httpse_title"
-        android:summary="@string/httpse_summary"
-        android:defaultValue="true" />
-    <org.chromium.components.browser_ui.settings.ChromeBaseCheckBoxPreference
-        android:key="ipfs_gateway"
-        android:title="@string/ipfs_gateway_title"
-        android:summary="@string/ipfs_gateway_summary"
-        android:defaultValue="true" />
-    <Preference
-        android:fragment="org.chromium.chrome.browser.decentralized_dns.settings.UnstoppableDomainsSettingsFragment"
-        android:key="unstoppable_domains"
-        android:title="@string/unstoppable_domains_title" />
-    <Preference
-        android:fragment="org.chromium.chrome.browser.decentralized_dns.settings.ENSSettingsFragment"
-        android:key="ens"
-        android:title="@string/ens_title" />
-    <org.chromium.components.browser_ui.settings.ChromeBaseCheckBoxPreference
-        android:key="ad_block"
-        android:title="@string/ad_block_title"
-        android:summary="@string/ad_block_summary"
-        android:defaultValue="true" />
-    <org.chromium.components.browser_ui.settings.ChromeBaseCheckBoxPreference
-        android:key="fingerprinting_protection"
-        android:title="@string/fingerprinting_protection_title"
-        android:summary="@string/fingerprinting_protection_summary"
-        android:defaultValue="true" />
-    <org.chromium.components.browser_ui.settings.ChromeSwitchPreference
-        android:key="search_suggestions"
-        android:title="@string/autocomplete_searches_and_urls_title"
-        android:summary="@string/autocomplete_searches_and_urls_summary"
-        android:persistent="false"/>
-    <org.chromium.components.browser_ui.settings.ChromeSwitchPreference
-        android:key="autocomplete_top_sites"
-        android:title="@string/autocomplete_top_sites_title"
-        android:persistent="false"/>
-    <org.chromium.components.browser_ui.settings.ChromeSwitchPreference
-        android:key="autocomplete_brave_suggested_sites"
-        android:title="@string/autocomplete_brave_suggested_sites_title"
-        android:persistent="false"/>
-    <org.chromium.components.browser_ui.settings.ChromeBasePreference
-        android:fragment="org.chromium.chrome.browser.settings.BraveWebrtcPolicyPreferencesFragment"
-        android:key="webrtc_policy"
-        android:title="@string/settings_webrtc_policy_label"
-        android:persistent="false"/>
     <PreferenceCategory
-        android:key="brave_shields_social_blocking"
+        android:key="brave_shields_globals_section"
+        android:title="@string/prefs_section_brave_shields_globals"/>    
+
+        <org.chromium.components.browser_ui.settings.ChromeBasePreference
+            android:fragment="org.chromium.chrome.browser.privacy.settings.BraveBlockTrackersAndAdsPreferences"
+            android:key="block_trackers_ads"
+            android:title="@string/block_trackers_ads_title"/>            
+        <org.chromium.components.browser_ui.settings.ChromeBaseCheckBoxPreference
+            android:key="httpse"
+            android:title="@string/httpse_title"
+            android:summary="@string/httpse_summary"
+            android:defaultValue="true" />
+        <org.chromium.components.browser_ui.settings.ChromeBasePreference
+            android:fragment="org.chromium.chrome.browser.privacy.settings.BraveBlockTrackersAndAdsPreferences"
+            android:key="block_scripts"
+            android:summary="@string/brave_shields_blocks_scripts_summary"
+            android:defaultValue="true" 
+            android:title="@string/brave_shields_blocks_scripts_switch"/>            
+        <org.chromium.components.browser_ui.settings.ChromeBasePreference
+            android:key="block_cross_site_cookies"
+            android:summary="@string/brave_shields_blocks_scripts_summary"
+            android:title="@string/block_cross_site_cookies"/>        
+        <org.chromium.components.browser_ui.settings.ChromeBaseCheckBoxPreference
+            android:key="fingerprinting_protection"
+            android:title="@string/fingerprinting_protection_title"
+            android:summary="@string/fingerprinting_protection_summary"
+            android:defaultValue="true" />
+        <org.chromium.components.browser_ui.settings.ChromeBasePreference
+            android:key="default_shields_values_text"
+            android:summary="@string/shields_summary"
+            android:defaultValue="true" />
+
+    <PreferenceCategory
+        android:key="clear_data_automatically_section"
+        android:title="@string/prefs_section_clear_data_automatically"/>
+
+        <org.chromium.components.browser_ui.settings.ChromeBasePreference
+            android:key="clear_data_frequency"
+            android:title="@string/clear_data_frequency"
+             />            
+        <org.chromium.components.browser_ui.settings.ChromeSwitchPreference
+            android:key="browsing_history"
+            android:title="@string/clear_browsing_history"
+            android:defaultValue="true" />        
+        <org.chromium.components.browser_ui.settings.ChromeSwitchPreference
+            android:key="clear_cache"
+            android:title="@string/clear_cache"
+            android:defaultValue="true" />       
+        <org.chromium.components.browser_ui.settings.ChromeSwitchPreference
+            android:key="clear_cookies"
+            android:title="@string/clear_cookies"
+            android:defaultValue="true" />        
+        <org.chromium.components.browser_ui.settings.ChromeSwitchPreference
+            android:key="clear_saved_logins"
+            android:title="@string/saved_logins"
+            android:defaultValue="true" />        
+        <org.chromium.components.browser_ui.settings.ChromeSwitchPreference
+            android:key="clear_downloaded_files"
+            android:title="@string/clear_downloaded_files"
+            android:defaultValue="true" />        
+        <org.chromium.components.browser_ui.settings.ChromeBasePreference
+            android:key="clear_private_data_button"
+            android:summary="@string/prefs_clear_data_text"
+            android:title="@string/prefs_clear_data_button" />
+
+<!--         <org.chromium.components.browser_ui.settings.ChromeSwitchPreference
+            android:key="ad_block"
+            android:title="@string/ad_block_title"
+            android:summary="@string/ad_block_summary"
+            android:defaultValue="true" /> -->
+
+    <PreferenceCategory
+        android:key="brave_social_blocking_section"
         android:title="@string/brave_shields_social_blocking_title">
 
         <org.chromium.components.browser_ui.settings.ChromeSwitchPreference
@@ -83,4 +99,47 @@
             android:title="@string/brave_shields_social_blocking_linkedin"
             android:defaultValue="false" />
     </PreferenceCategory>
+        <PreferenceCategory
+        android:key="other_privacy_settings_section"
+        android:title="@string/prefs_section_other_privacy_settings"/>
+                <org.chromium.components.browser_ui.settings.ChromeBasePreference
+            android:fragment="org.chromium.chrome.browser.settings.BraveWebrtcPolicyPreferencesFragment"
+            android:key="webrtc_policy"
+            android:title="@string/settings_webrtc_policy_label"
+            android:persistent="false"/>
+                <org.chromium.components.browser_ui.settings.ChromeBaseCheckBoxPreference
+            android:key="close_tabs_on_exit"
+            android:title="@string/close_tabs_on_exit_title"
+            android:summary="@string/close_tabs_on_exit_summary" />
+                <Preference
+            android:fragment="org.chromium.chrome.browser.decentralized_dns.settings.UnstoppableDomainsSettingsFragment"
+            android:key="unstoppable_domains"
+            android:title="@string/unstoppable_domains_title" />
+                <org.chromium.components.browser_ui.settings.ChromeSwitchPreference
+            android:key="search_suggestions"
+            android:title="@string/autocomplete_searches_and_urls_title"
+            android:summary="@string/autocomplete_searches_and_urls_summary"
+            android:persistent="false"/>
+        <org.chromium.components.browser_ui.settings.ChromeSwitchPreference
+            android:key="autocomplete_top_sites"
+            android:title="@string/autocomplete_top_sites_title"
+            android:persistent="false"/>
+        <org.chromium.components.browser_ui.settings.ChromeSwitchPreference
+            android:key="autocomplete_brave_suggested_sites"
+            android:title="@string/autocomplete_brave_suggested_sites_title"
+            android:persistent="false"/>
+        <org.chromium.components.browser_ui.settings.ChromeBaseCheckBoxPreference
+            android:key="send_p3a_analytics"
+            android:title="@string/send_p3a_analytics_title"
+            android:summary="@string/send_p3a_analytics_summary"
+            android:defaultValue="false" />            
+        <org.chromium.components.browser_ui.settings.ChromeBaseCheckBoxPreference
+            android:key="ipfs_gateway"
+            android:title="@string/ipfs_gateway_title"
+            android:summary="@string/ipfs_gateway_summary"
+            android:defaultValue="true" />            
+                <Preference
+            android:fragment="org.chromium.chrome.browser.decentralized_dns.settings.ENSSettingsFragment"
+            android:key="ens"
+            android:title="@string/ens_title" />
 </PreferenceScreen>

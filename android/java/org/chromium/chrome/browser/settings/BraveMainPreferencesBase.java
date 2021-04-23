@@ -213,6 +213,10 @@ public class BraveMainPreferencesBase
         findPreference(PREF_RATE_BRAVE).setOrder(++supportSectionOrder);
 
         int aboutSectionOrder = supportSectionOrder;
+        // This preference doesn't exist by default in Release mode
+        if (findPreference(MainSettings.PREF_DEVELOPER) != null) {
+            findPreference(MainSettings.PREF_DEVELOPER).setOrder(++aboutSectionOrder);
+        }
         findPreference(PREF_ABOUT_SECTION).setOrder(++aboutSectionOrder);
 
         // This preference doesn't exist by default in Release mode
@@ -266,7 +270,7 @@ public class BraveMainPreferencesBase
         updatePreferenceIcon(PREF_PRIVACY, R.drawable.ic_privacy_reports);
         updatePreferenceIcon(PREF_ADDRESSES, R.drawable.ic_addresses);
         updatePreferenceIcon(PREF_NOTIFICATIONS, R.drawable.ic_notification);
-        updatePreferenceIcon(PREF_DEVELOPER, R.drawable.ic_info);
+        updatePreferenceIcon(MainSettings.PREF_DEVELOPER, R.drawable.ic_info);
     }
 
     private void updateSearchEnginePreference() {
