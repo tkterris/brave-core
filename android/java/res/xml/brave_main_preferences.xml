@@ -52,16 +52,16 @@
         android:order="9"
         android:icon="@drawable/ic_privacy_reports"
         android:title="@string/brave_stats"/>      
-    <org.chromium.components.browser_ui.settings.ChromeBasePreference
-        android:fragment="org.chromium.chrome.browser.settings.ClosingAllTabsClosesBravePreference"
+    <org.chromium.components.browser_ui.settings.ChromeSwitchPreference
         android:key="closing_all_tabs_closes_brave"
         android:order="13"
+        android:defaultValue="false"
         android:icon="@drawable/ic_closing_all_closes_brave"
         android:title="@string/prefs_closing_all_tabs_closes_brave"/>          
-    <org.chromium.components.browser_ui.settings.ChromeBasePreference
-        android:fragment="org.chromium.chrome.browser.settings.BackgroundVideoPlaybackPreference"
+    <org.chromium.components.browser_ui.settings.ChromeSwitchPreference
         android:key="background_video_playback"
         android:order="14"
+        android:defaultValue="false"
         android:icon="@drawable/ic_bg_video_playback"
         android:title="@string/prefs_background_video_playback"/>
     <PreferenceCategory

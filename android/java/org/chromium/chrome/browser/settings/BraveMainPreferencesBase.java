@@ -18,11 +18,13 @@ import org.chromium.base.Log;
 import org.chromium.chrome.R;
 import org.chromium.chrome.browser.BraveConfig;
 import org.chromium.chrome.browser.BraveFeatureList;
+import org.chromium.chrome.browser.BraveRelaunchUtils;
 import org.chromium.chrome.browser.app.BraveActivity;
 import org.chromium.chrome.browser.flags.ChromeFeatureList;
 import org.chromium.chrome.browser.homepage.settings.BraveHomepageSettings;
 import org.chromium.chrome.browser.ntp_background_images.NTPBackgroundImagesBridge;
 import org.chromium.chrome.browser.ntp_background_images.util.NTPUtil;
+import org.chromium.chrome.browser.partnercustomizations.CloseBraveManager;
 import org.chromium.chrome.browser.preferences.BravePrefServiceBridge;
 import org.chromium.chrome.browser.privacy.settings.BravePrivacySettings;
 import org.chromium.chrome.browser.rate.RateDialogFragment;
@@ -32,13 +34,15 @@ import org.chromium.chrome.browser.settings.BravePreferenceFragment;
 import org.chromium.chrome.browser.settings.BraveStatsPreferences;
 import org.chromium.chrome.browser.toolbar.bottom.BottomToolbarConfiguration;
 import org.chromium.components.browser_ui.settings.ChromeBasePreference;
+import org.chromium.components.browser_ui.settings.ChromeSwitchPreference;
 import org.chromium.components.browser_ui.settings.SettingsUtils;
 import org.chromium.ui.base.DeviceFormFactor;
 
 import java.util.HashMap;
 
 // This exculdes some settings in main settings screen.
-public class BraveMainPreferencesBase extends BravePreferenceFragment {
+public class BraveMainPreferencesBase
+        extends BravePreferenceFragment implements Preference.OnPreferenceChangeListener {
     // sections
     private static final String PREF_FEATURES_SECTION = "features_section";
     private static final String PREF_DISPLAY_SECTION = "display_section";
@@ -93,6 +97,7 @@ public class BraveMainPreferencesBase extends BravePreferenceFragment {
 
         overrideChromiumPreferences();
         initRateBrave();
+        setPreferenceListeners();
     }
 
     @Override
@@ -127,10 +132,11 @@ public class BraveMainPreferencesBase extends BravePreferenceFragment {
 
         updateSearchEnginePreference();
 
-        updateControlSectionPreferences();
+        updateSummaries();
 
+        // updates the icons - normally the ones from Chromium
         updatePreferenceIcons();
-
+        // rearanges programmatically the order for the prefs from Brave and Chromium, no need to do that in the xml 
         rearrangePreferenceOrders();
 
         if (!ChromeFeatureList.isEnabled(BraveFeatureList.BRAVE_REWARDS) ||
@@ -260,6 +266,7 @@ public class BraveMainPreferencesBase extends BravePreferenceFragment {
         updatePreferenceIcon(PREF_PRIVACY, R.drawable.ic_privacy_reports);
         updatePreferenceIcon(PREF_ADDRESSES, R.drawable.ic_addresses);
         updatePreferenceIcon(PREF_NOTIFICATIONS, R.drawable.ic_notification);
+        updatePreferenceIcon(PREF_DEVELOPER, R.drawable.ic_info);
     }
 
     private void updateSearchEnginePreference() {
@@ -271,21 +278,29 @@ public class BraveMainPreferencesBase extends BravePreferenceFragment {
         }
     }
 
-    private void updateControlSectionPreferences() {
-        Preference p = findPreference(PREF_BACKGROUND_VIDEO_PLAYBACK);
-        p.setSummary(BackgroundVideoPlaybackPreference.getPreferenceSummary());
-        p = findPreference(PREF_CLOSING_ALL_TABS_CLOSES_BRAVE);
-        p.setSummary(ClosingAllTabsClosesBravePreference.getPreferenceSummary());
-        p = findPreference(PREF_USE_CUSTOM_TABS);
-        p.setSummary(BraveCustomTabsPreference.getPreferenceSummary());
-        p = findPreference(PREF_BRAVE_STATS);
-        p.setSummary(BraveStatsPreferences.getPreferenceSummary());
+    private void updateSummary(String preferenceString, int summary){
+        Preference p = findPreference(preferenceString);
+        p.setSummary(summary);
+    }
+
+    private void updateSummaries(){
+        updateSummary(PREF_USE_CUSTOM_TABS, BraveCustomTabsPreference.getPreferenceSummary());
+        updateSummary(PREF_BRAVE_STATS, BraveStatsPreferences.getPreferenceSummary());
+        if (BravePrefServiceBridge.getInstance().getBackgroundVideoPlaybackEnabled()) {
+            updateSummary(PREF_BACKGROUND_VIDEO_PLAYBACK, R.string.prefs_background_video_playback_on);            
+        }
+
     }
 
     private void overrideChromiumPreferences() {
         // Replace fragment.
         findPreference(PREF_SHIELDS_AND_PRIVACY).setFragment(BravePrivacySettings.class.getName());
         findPreference(PREF_HOMEPAGE).setFragment(BraveHomepageSettings.class.getName());
+    }
+
+    private void setPreferenceListeners() {
+        findPreference(PREF_CLOSING_ALL_TABS_CLOSES_BRAVE).setOnPreferenceChangeListener(this);
+        findPreference(PREF_BACKGROUND_VIDEO_PLAYBACK).setOnPreferenceChangeListener(this);
     }
 
     private void initRateBrave() {
@@ -310,5 +325,26 @@ public class BraveMainPreferencesBase extends BravePreferenceFragment {
         DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
         float px = dp * (metrics.densityDpi / DP_PER_INCH_MDPI);
         return Math.round(px);
+    }
+
+    @Override
+    public boolean onPreferenceChange(Preference preference, Object newValue) {
+        String key = preference.getKey();
+        if (PREF_CLOSING_ALL_TABS_CLOSES_BRAVE.equals(key)) {
+            CloseBraveManager.setClosingAllTabsClosesBraveEnabled((boolean) newValue);
+        }
+
+        if (PREF_BACKGROUND_VIDEO_PLAYBACK.equals(key)) {
+            BravePrefServiceBridge.getInstance().setBackgroundVideoPlaybackEnabled(
+                    (boolean) newValue);
+            if ((boolean) newValue) {
+                updateSummary(PREF_BACKGROUND_VIDEO_PLAYBACK, R.string.prefs_background_video_playback_on);            
+            } else {
+                findPreference(PREF_BACKGROUND_VIDEO_PLAYBACK).setSummary("");            
+            }            
+            BraveRelaunchUtils.askForRelaunch(this.getActivity());
+        }
+
+        return true;
     }
 }
