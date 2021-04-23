@@ -5,7 +5,7 @@
 
 #include "base/path_service.h"
 #include "base/scoped_observer.h"
-#include "brave/browser/infobars/crypto_wallets_infobar_delegate.h"
+#include "brave/browser/brave_wallet/crypto_wallets_infobar_delegate.h"
 #include "brave/common/brave_paths.h"
 #include "brave/common/pref_names.h"
 #include "brave/components/brave_wallet/browser/brave_wallet_constants.h"

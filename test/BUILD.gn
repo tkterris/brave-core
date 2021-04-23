@@ -394,7 +394,6 @@ test("brave_unit_tests") {
   if (brave_wallet_enabled) {
     sources += [ "//brave/browser/extensions/brave_wallet_unittest.cc" ]
     deps += [
-      "//brave/browser/brave_wallet",
       "//brave/common:pref_names",
       "//brave/components/brave_wallet/browser",
       "//brave/components/brave_wallet/common",
@@ -676,7 +675,7 @@ if (!is_android) {
       ]
 
       deps += [
-        "//brave/browser/infobars",
+        "//brave/browser/brave_wallet:infobar",
         "//brave/components/brave_wallet/browser",
         "//brave/components/brave_wallet/common",
       ]

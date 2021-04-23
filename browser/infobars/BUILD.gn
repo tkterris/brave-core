@@ -27,22 +27,6 @@ source_set("infobars") {
     "//url",
   ]
 
-  if (brave_wallet_enabled) {
-    sources += [
-      "crypto_wallets_infobar_delegate.cc",
-      "crypto_wallets_infobar_delegate.h",
-    ]
-
-    deps += [
-      "//brave/browser/brave_wallet",
-      "//brave/common:pref_names",
-      "//brave/components/brave_wallet/browser",
-      "//brave/components/brave_wallet/common",
-      "//components/user_prefs:user_prefs",
-      "//extensions/common:common_constants",
-    ]
-  }
-
   if (ipfs_enabled) {
     deps += [
       "//brave/components/ipfs",
