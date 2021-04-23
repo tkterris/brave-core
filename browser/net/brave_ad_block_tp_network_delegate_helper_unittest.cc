@@ -14,6 +14,11 @@
 #include "net/base/net_errors.h"
 #include "testing/gtest/include/gtest/gtest.h"
 
+#include "chrome/test/base/testing_browser_process.h"
+#include "content/public/test/browser_task_environment.h"
+
+#include "brave/browser/brave_browser_process_impl.h"
+
 using brave::ResponseCallback;
 
 TEST(BraveAdBlockTPNetworkDelegateHelperTest, NoChangeURL) {
@@ -38,6 +43,24 @@ TEST(BraveAdBlockTPNetworkDelegateHelperTest, DevToolURL) {
   auto request_info = std::make_shared<brave::BraveRequestInfo>(url);
   request_info->initiator_url =
       GURL("devtools://devtools/bundled/root/root.js");
+  int rc =
+      OnBeforeURLRequest_AdBlockTPPreWork(ResponseCallback(), request_info);
+  EXPECT_TRUE(request_info->new_url_spec.empty());
+  EXPECT_EQ(rc, net::OK);
+}
+
+TEST(BraveAdBlockTPNetworkDelegateHelperTest, Global) {
+
+  //g_brave_browser_process = TestingBrowserProcess::GetGlobal();
+  TestingBrowserProcess::CreateInstance();
+
+  content::BrowserTaskEnvironment task_environment_;
+  const GURL url("https://antonok.com/tmp/test.txt");
+  auto request_info = std::make_shared<brave::BraveRequestInfo>(url);
+  request_info->request_identifier = 1;
+  request_info->resource_type = blink::mojom::ResourceType::kScript;
+  request_info->initiator_url =
+      GURL("https://antonok.com");
   int rc =
       OnBeforeURLRequest_AdBlockTPPreWork(ResponseCallback(), request_info);
   EXPECT_TRUE(request_info->new_url_spec.empty());
