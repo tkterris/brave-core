@@ -8,6 +8,7 @@
 
 #include <memory>
 
+#include "bat/ledger/internal/endpoint/gemini/get_account/get_account_gemini.h"
 #include "bat/ledger/internal/endpoint/gemini/get_balance/get_balance_gemini.h"
 #include "bat/ledger/internal/endpoint/gemini/post_oauth/post_oauth_gemini.h"
 #include "bat/ledger/internal/endpoint/gemini/post_transaction/post_transaction_gemini.h"
@@ -23,6 +24,8 @@ class GeminiServer {
   explicit GeminiServer(LedgerImpl* ledger);
   ~GeminiServer();
 
+  gemini::GetAccount* get_account() const;
+
   gemini::GetBalance* get_balance() const;
 
   gemini::PostOauth* post_oauth() const;
@@ -30,6 +33,7 @@ class GeminiServer {
   gemini::PostTransaction* post_transaction() const;
 
  private:
+  std::unique_ptr<gemini::GetAccount> get_account_;
   std::unique_ptr<gemini::GetBalance> get_balance_;
   std::unique_ptr<gemini::PostOauth> post_oauth_;
   std::unique_ptr<gemini::PostTransaction> post_transaction_;

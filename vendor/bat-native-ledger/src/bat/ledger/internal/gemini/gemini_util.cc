@@ -50,26 +50,26 @@ std::string GetACAddress() {
              : kACAddressStaging;
 }
 
-std::string GetAuthorizeUrl(const std::string& state,
-                            const std::string& code_verifier) {
+std::string GetAuthorizeUrl(const std::string& state) {
   const std::string id = GetClientId();
   const std::string url = GetUrl();
 
-  // Calculate PKCE code challenge
-  std::string code_challenge = util::GeneratePKCECodeChallenge(code_verifier);
   return base::StringPrintf(
-      "%s/ex/OAuth/authorize"
+      "%s/auth"
       "?client_id=%s"
       "&scope="
-      "assets "
-      "create_deposit_id "
-      "withdraw_to_deposit_id"
+      "orders:create,"
+      "payments:send,"
+      "payments:create,"
+      "balances:read,"
+      "payments:read,"
+      "orders:read,"
+      "addresses:create,"
+      "account:read"
       "&redirect_uri=rewards://gemini/authorization"
       "&state=%s"
-      "&response_type=code"
-      "&code_challenge_method=S256"
-      "&code_challenge=%s",
-      url.c_str(), id.c_str(), state.c_str(), code_challenge.c_str());
+      "&response_type=code",
+      url.c_str(), id.c_str(), state.c_str());
 }
 
 std::string GetAddUrl() {
@@ -241,7 +241,7 @@ type::ExternalWalletPtr GenerateLinks(type::ExternalWalletPtr wallet) {
   }
 
   const std::string auth_url =
-      GetAuthorizeUrl(wallet->one_time_string, wallet->code_verifier);
+      GetAuthorizeUrl(wallet->one_time_string);
 
   wallet->verify_url = auth_url;
   wallet->account_url = GetAccountUrl();

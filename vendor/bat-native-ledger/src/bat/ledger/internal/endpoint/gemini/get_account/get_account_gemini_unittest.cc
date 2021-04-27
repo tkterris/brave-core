@@ -8,7 +8,7 @@
 #include <vector>
 
 #include "base/test/task_environment.h"
-#include "bat/ledger/internal/endpoint/bitflyer/get_balance/get_balance_bitflyer.h"
+#include "bat/ledger/internal/endpoint/gemini/get_balance/get_balance_gemini.h"
 #include "bat/ledger/internal/ledger_client_mock.h"
 #include "bat/ledger/internal/ledger_impl_mock.h"
 #include "bat/ledger/ledger.h"
@@ -22,7 +22,7 @@ using ::testing::Invoke;
 
 namespace ledger {
 namespace endpoint {
-namespace bitflyer {
+namespace gemini {
 
 class GetBalanceTest : public testing::Test {
  private:
@@ -164,6 +164,6 @@ TEST_F(GetBalanceTest, ServerErrorRandom) {
                     });
 }
 
-}  // namespace bitflyer
+}  // namespace gemini
 }  // namespace endpoint
 }  // namespace ledger

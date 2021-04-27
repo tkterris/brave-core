@@ -43,13 +43,15 @@ class PostClaimGemini {
   explicit PostClaimGemini(LedgerImpl* ledger);
   ~PostClaimGemini();
 
-  void Request(const std::string& linking_info,
+  void Request(const std::string& address,
+               const std::string& linking_info,
                PostClaimGeminiCallback callback);
 
  private:
   std::string GetUrl();
 
-  std::string GeneratePayload(const std::string& linking_info);
+  std::string GeneratePayload(const std::string& address,
+                              const std::string& linking_info);
 
   type::Result CheckStatusCode(const int status_code);
 

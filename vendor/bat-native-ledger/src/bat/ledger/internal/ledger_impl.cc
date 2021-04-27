@@ -741,6 +741,20 @@ void LedgerImpl::GetExternalWallet(const std::string& wallet_type,
     return;
   }
 
+  if (wallet_type == constant::kWalletGemini) {
+    gemini()->GenerateWallet([this, callback](const type::Result result) {
+      if (result != type::Result::LEDGER_OK &&
+          result != type::Result::CONTINUE) {
+        callback(result, nullptr);
+        return;
+      }
+
+      auto wallet = gemini()->GetWallet();
+      callback(type::Result::LEDGER_OK, std::move(wallet));
+    });
+    return;
+  }
+
   NOTREACHED();
   callback(type::Result::LEDGER_OK, nullptr);
 }

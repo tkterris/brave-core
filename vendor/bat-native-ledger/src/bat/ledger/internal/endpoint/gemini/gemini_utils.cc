@@ -14,8 +14,8 @@ namespace ledger {
 namespace endpoint {
 namespace gemini {
 
-const char kUrlStaging[] = "https://api.sandbox.gemini.com";
-const char kUrlProduction[] = "https://api.gemini.com";
+const char kUrlStaging[] = "https://exchange.sandbox.gemini.com";
+const char kUrlProduction[] = "https://exchange.gemini.com";
 
 std::string GetClientId() {
   return ::ledger::gemini::GetClientId();

@@ -49,9 +49,7 @@ namespace endpoint {
 namespace gemini {
 
 using PostOauthCallback = std::function<void(const type::Result result,
-                                             const std::string& token,
-                                             const std::string& address,
-                                             const std::string& linking_info)>;
+                                             const std::string& token)>;
 
 class PostOauth {
  public:
@@ -60,22 +58,18 @@ class PostOauth {
 
   void Request(const std::string& external_account_id,
                const std::string& code,
-               const std::string& code_verifier,
                PostOauthCallback callback);
 
  private:
   std::string GetUrl();
 
   std::string GeneratePayload(const std::string& external_account_id,
-                              const std::string& code,
-                              const std::string& code_verifier);
+                              const std::string& code);
 
   type::Result CheckStatusCode(const int status_code);
 
   type::Result ParseBody(const std::string& body,
-                         std::string* token,
-                         std::string* address,
-                         std::string* linking_info);
+                         std::string* token);
 
   void OnRequest(const type::UrlResponse& response, PostOauthCallback callback);
 

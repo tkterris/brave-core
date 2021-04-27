@@ -3,14 +3,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef BRAVE_VENDOR_BAT_NATIVE_LEDGER_SRC_BAT_LEDGER_INTERNAL_ENDPOINT_BITFLYER_GET_BALANCE_GET_BALANCE_BITFLYER_H_
-#define BRAVE_VENDOR_BAT_NATIVE_LEDGER_SRC_BAT_LEDGER_INTERNAL_ENDPOINT_BITFLYER_GET_BALANCE_GET_BALANCE_BITFLYER_H_
+#ifndef BRAVE_VENDOR_BAT_NATIVE_LEDGER_SRC_BAT_LEDGER_INTERNAL_ENDPOINT_GEMINI_GET_ACCOUNT_GET_ACCOUNT_GEMINI_H_
+#define BRAVE_VENDOR_BAT_NATIVE_LEDGER_SRC_BAT_LEDGER_INTERNAL_ENDPOINT_GEMINI_GET_ACCOUNT_GET_ACCOUNT_GEMINI_H_
 
 #include <string>
 
 #include "bat/ledger/ledger.h"
 
-// GET https://bitflyer.jp/api/link/v1/account/inventory
+// GET https://gemini.jp/api/link/v1/account/inventory
 //
 // Success code:
 // HTTP_OK (200)
@@ -44,33 +44,33 @@ namespace ledger {
 class LedgerImpl;
 
 namespace endpoint {
-namespace bitflyer {
+namespace gemini {
 
-using GetBalanceCallback =
-    std::function<void(const type::Result result, const double available)>;
+using GetAccountCallback =
+    std::function<void(const type::Result result, const std::string address, const std::string linking_info)>;
 
-class GetBalance {
+class GetAccount {
  public:
-  explicit GetBalance(LedgerImpl* ledger);
-  ~GetBalance();
+  explicit GetAccount(LedgerImpl* ledger);
+  ~GetAccount();
 
-  void Request(const std::string& token, GetBalanceCallback callback);
+  void Request(const std::string& token, GetAccountCallback callback);
 
  private:
   std::string GetUrl();
 
   type::Result CheckStatusCode(const int status_code);
 
-  type::Result ParseBody(const std::string& body, double* available);
+  type::Result ParseBody(const std::string& body, std::string* address, std::string* linking_info);
 
   void OnRequest(const type::UrlResponse& response,
-                 GetBalanceCallback callback);
+                 GetAccountCallback callback);
 
   LedgerImpl* ledger_;  // NOT OWNED
 };
 
-}  // namespace bitflyer
+}  // namespace gemini
 }  // namespace endpoint
 }  // namespace ledger
 
-#endif  // BRAVE_VENDOR_BAT_NATIVE_LEDGER_SRC_BAT_LEDGER_INTERNAL_ENDPOINT_BITFLYER_GET_BALANCE_GET_BALANCE_BITFLYER_H_
+#endif  // BRAVE_VENDOR_BAT_NATIVE_LEDGER_SRC_BAT_LEDGER_INTERNAL_ENDPOINT_GEMINI_GET_ACCOUNT_GET_ACCOUNT_GEMINI_H_

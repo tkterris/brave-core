@@ -2878,7 +2878,8 @@ void RewardsServiceImpl::ProcessRewardsPageUrl(
 
   if (action == "authorization" && !OnlyAnonWallet()) {
     if (wallet_type == ledger::constant::kWalletUphold ||
-        wallet_type == ledger::constant::kWalletBitflyer) {
+        wallet_type == ledger::constant::kWalletBitflyer ||
+        wallet_type == ledger::constant::kWalletGemini) {
       ExternalWalletAuthorization(
           wallet_type,
           query_map,
@@ -3441,7 +3442,7 @@ std::string RewardsServiceImpl::GetExternalWalletType() const {
     }
   }
 
-  return ledger::constant::kWalletUphold;
+  return ledger::constant::kWalletGemini;
 }
 
 }  // namespace brave_rewards

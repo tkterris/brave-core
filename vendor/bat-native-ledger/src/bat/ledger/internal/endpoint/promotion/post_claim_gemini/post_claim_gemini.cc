@@ -10,6 +10,7 @@
 #include "base/json/json_writer.h"
 #include "base/strings/stringprintf.h"
 #include "bat/ledger/internal/common/request_util.h"
+#include "bat/ledger/internal/endpoint/promotion/promotion_server.h"
 #include "bat/ledger/internal/endpoint/promotion/promotions_util.h"
 #include "bat/ledger/internal/ledger_impl.h"
 #include "bat/ledger/mojom_structs.h"
@@ -48,9 +49,11 @@ std::string PostClaimGemini::GetUrl() {
 }
 
 std::string PostClaimGemini::GeneratePayload(
+    const std::string& address,
     const std::string& linking_info) {
   base::Value payload(base::Value::Type::DICTIONARY);
-  payload.SetStringKey("linkingInfo", linking_info);
+  payload.SetStringKey("deposit_id",  address);
+  payload.SetStringKey("linking_info", linking_info);
   std::string json;
   base::JSONWriter::Write(payload, &json);
 
@@ -85,11 +88,12 @@ type::Result PostClaimGemini::CheckStatusCode(const int status_code) {
   return type::Result::LEDGER_OK;
 }
 
-void PostClaimGemini::Request(const std::string& linking_info,
-                                PostClaimGeminiCallback callback) {
+void PostClaimGemini::Request(const std::string& address,
+                              const std::string& linking_info,
+                              PostClaimGeminiCallback callback) {
   auto url_callback =
       std::bind(&PostClaimGemini::OnRequest, this, _1, callback);
-  const std::string payload = GeneratePayload(linking_info);
+  const std::string payload = GeneratePayload(address, linking_info);
 
   const auto wallet = ledger_->wallet()->GetWallet();
   if (!wallet) {

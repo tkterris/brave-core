@@ -294,6 +294,8 @@ source_set("ledger") {
     "src/bat/ledger/internal/endpoint/gemini/gemini_server.h",
     "src/bat/ledger/internal/endpoint/gemini/gemini_utils.cc",
     "src/bat/ledger/internal/endpoint/gemini/gemini_utils.h",
+    "src/bat/ledger/internal/endpoint/gemini/get_account/get_account_gemini.cc",
+    "src/bat/ledger/internal/endpoint/gemini/get_account/get_account_gemini.h",
     "src/bat/ledger/internal/endpoint/gemini/get_balance/get_balance_gemini.cc",
     "src/bat/ledger/internal/endpoint/gemini/get_balance/get_balance_gemini.h",
     "src/bat/ledger/internal/endpoint/gemini/post_oauth/post_oauth_gemini.cc",

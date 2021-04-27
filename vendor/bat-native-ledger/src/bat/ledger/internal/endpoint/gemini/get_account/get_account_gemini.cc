@@ -1,0 +1,117 @@
+/* Copyright (c) 2021 The Brave Authors. All rights reserved.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#include "bat/ledger/internal/endpoint/gemini/get_account/get_account_gemini.h"
+
+#include <utility>
+
+#include "base/json/json_reader.h"
+#include "base/strings/string_number_conversions.h"
+#include "base/strings/stringprintf.h"
+#include "bat/ledger/internal/endpoint/gemini/gemini_utils.h"
+#include "bat/ledger/internal/ledger_impl.h"
+#include "net/http/http_status_code.h"
+
+using std::placeholders::_1;
+
+namespace ledger {
+namespace endpoint {
+namespace gemini {
+
+GetAccount::GetAccount(LedgerImpl* ledger) : ledger_(ledger) {
+  DCHECK(ledger_);
+}
+
+GetAccount::~GetAccount() = default;
+
+std::string GetAccount::GetUrl() {
+  return GetServerUrl("/v1/account/");
+}
+
+type::Result GetAccount::CheckStatusCode(const int status_code) {
+  if (status_code == net::HTTP_UNAUTHORIZED ||
+      status_code == net::HTTP_NOT_FOUND ||
+      status_code == net::HTTP_FORBIDDEN) {
+    return type::Result::EXPIRED_TOKEN;
+  }
+
+  if (status_code != net::HTTP_OK) {
+    return type::Result::LEDGER_ERROR;
+  }
+
+  return type::Result::LEDGER_OK;
+}
+
+type::Result GetAccount::ParseBody(const std::string& body,
+                                   std::string* address,
+                                   std::string* linking_info) {
+  DCHECK(address);
+  DCHECK(linking_info);
+
+  base::Optional<base::Value> value = base::JSONReader::Read(body);
+  if (!value || !value->is_dict()) {
+    BLOG(0, "Invalid JSON");
+    return type::Result::LEDGER_ERROR;
+  }
+
+  base::DictionaryValue* dictionary = nullptr;
+  if (!value->GetAsDictionary(&dictionary)) {
+    BLOG(0, "Invalid JSON");
+    return type::Result::LEDGER_ERROR;
+  }
+
+  base::Value* account = dictionary->FindDictKey("account");
+  if (!account) {
+    BLOG(0, "Missing account info");
+    return type::Result::LEDGER_ERROR;
+  }
+
+  const auto* account_name = account->FindStringKey("accountName");
+  if (!account_name) {
+    BLOG(0, "Missing account name");
+    return type::Result::LEDGER_ERROR;
+  }
+
+  const auto* linking_information = account->FindStringKey("verificationToken");
+  if (!linking_info) {
+    BLOG(0, "Missing linking info");
+    return type::Result::LEDGER_ERROR;
+  }
+
+  *address = *account_name;
+  *linking_info = *linking_information;
+
+  return type::Result::LEDGER_OK;
+}
+
+void GetAccount::Request(const std::string& token,
+                         GetAccountCallback callback) {
+  auto url_callback = std::bind(&GetAccount::OnRequest, this, _1, callback);
+  auto request = type::UrlRequest::New();
+  request->url = GetUrl();
+  request->headers = RequestAuthorization(token);
+  ledger_->LoadURL(std::move(request), url_callback);
+}
+
+void GetAccount::OnRequest(const type::UrlResponse& response,
+                           GetAccountCallback callback) {
+  ledger::LogUrlResponse(__func__, response);
+
+  type::Result result = CheckStatusCode(response.status_code);
+
+  if (result != type::Result::LEDGER_OK) {
+    callback(result, "", "");
+    return;
+  }
+
+  std::string linking_info;
+  std::string address;
+  result = ParseBody(response.body, &address, &linking_info);
+  callback(result, address, linking_info);
+}
+
+}  // namespace gemini
+}  // namespace endpoint
+}  // namespace ledger

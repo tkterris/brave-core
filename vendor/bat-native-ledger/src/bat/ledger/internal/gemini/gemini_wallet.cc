@@ -35,10 +35,6 @@ void GeminiWallet::Generate(ledger::ResultCallback callback) {
     wallet->one_time_string = util::GenerateRandomHexString();
   }
 
-  if (wallet->code_verifier.empty()) {
-    wallet->code_verifier = util::GeneratePKCECodeVerifier();
-  }
-
   if (wallet->token.empty() &&
       (wallet->status == type::WalletStatus::PENDING ||
        wallet->status == type::WalletStatus::CONNECTED)) {
