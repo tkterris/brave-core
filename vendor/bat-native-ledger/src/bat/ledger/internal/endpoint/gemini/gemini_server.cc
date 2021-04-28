@@ -11,19 +11,19 @@ namespace ledger {
 namespace endpoint {
 
 GeminiServer::GeminiServer(LedgerImpl* ledger)
-    : get_account_(std::make_unique<gemini::GetAccount>(ledger)),
-      get_balance_(std::make_unique<gemini::GetBalance>(ledger)),
+    : get_balance_(std::make_unique<gemini::GetBalance>(ledger)),
+      post_account_(std::make_unique<gemini::PostAccount>(ledger)),
       post_oauth_(std::make_unique<gemini::PostOauth>(ledger)),
       post_transaction_(std::make_unique<gemini::PostTransaction>(ledger)) {}
 
 GeminiServer::~GeminiServer() = default;
 
-gemini::GetAccount* GeminiServer::get_account() const {
-  return get_account_.get();
-}
-
 gemini::GetBalance* GeminiServer::get_balance() const {
   return get_balance_.get();
+}
+
+gemini::PostAccount* GeminiServer::post_account() const {
+  return post_account_.get();
 }
 
 gemini::PostOauth* GeminiServer::post_oauth() const {

@@ -28,7 +28,7 @@ PostTransaction::PostTransaction(LedgerImpl* ledger) : ledger_(ledger) {
 PostTransaction::~PostTransaction() = default;
 
 std::string PostTransaction::GetUrl() {
-  return GetServerUrl("/api/link/v1/coin/withdraw-to-deposit-id/request");
+  return GetApiServerUrl("/api/link/v1/coin/withdraw-to-deposit-id/request");
 }
 
 std::string PostTransaction::GeneratePayload(

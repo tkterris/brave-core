@@ -19,7 +19,8 @@ std::string GetClientSecret();
 
 std::vector<std::string> RequestAuthorization(const std::string& token = "");
 
-std::string GetServerUrl(const std::string& path);
+std::string GetApiServerUrl(const std::string& path);
+std::string GetOauthServerUrl(const std::string& path);
 
 }  // namespace gemini
 }  // namespace endpoint

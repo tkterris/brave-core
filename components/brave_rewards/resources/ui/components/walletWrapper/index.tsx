@@ -53,6 +53,7 @@ import {
 } from 'brave-ui/components/icons'
 
 import { BitflyerIcon } from '../../../shared/components/icons/bitflyer_icon'
+import { GeminiIcon } from '../../../shared/components/icons/gemini_icon'
 
 import giftIconUrl from './assets/gift.svg'
 import loveIconUrl from './assets/love.svg'
@@ -324,6 +325,7 @@ export default class WalletWrapper extends React.PureComponent<Props, State> {
     const walletProviderIcon =
       walletType === 'uphold' ? <UpholdSystemIcon /> :
       walletType === 'bitflyer' ? <BitflyerIcon white={true} /> :
+      walletType === 'gemini' ? <GeminiIcon white={true} /> :
       null
 
     const buttonProps: Partial<ButtonProps> = {

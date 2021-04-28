@@ -3,7 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "bat/ledger/internal/endpoint/gemini/get_account/get_account_gemini.h"
+#include "bat/ledger/internal/endpoint/gemini/post_account/post_account_gemini.h"
 
 #include <utility>
 
@@ -20,17 +20,17 @@ namespace ledger {
 namespace endpoint {
 namespace gemini {
 
-GetAccount::GetAccount(LedgerImpl* ledger) : ledger_(ledger) {
+PostAccount::PostAccount(LedgerImpl* ledger) : ledger_(ledger) {
   DCHECK(ledger_);
 }
 
-GetAccount::~GetAccount() = default;
+PostAccount::~PostAccount() = default;
 
-std::string GetAccount::GetUrl() {
-  return GetServerUrl("/v1/account/");
+std::string PostAccount::GetUrl() {
+  return GetApiServerUrl("/v1/account");
 }
 
-type::Result GetAccount::CheckStatusCode(const int status_code) {
+type::Result PostAccount::CheckStatusCode(const int status_code) {
   if (status_code == net::HTTP_UNAUTHORIZED ||
       status_code == net::HTTP_NOT_FOUND ||
       status_code == net::HTTP_FORBIDDEN) {
@@ -44,7 +44,7 @@ type::Result GetAccount::CheckStatusCode(const int status_code) {
   return type::Result::LEDGER_OK;
 }
 
-type::Result GetAccount::ParseBody(const std::string& body,
+type::Result PostAccount::ParseBody(const std::string& body,
                                    std::string* address,
                                    std::string* linking_info) {
   DCHECK(address);
@@ -86,17 +86,18 @@ type::Result GetAccount::ParseBody(const std::string& body,
   return type::Result::LEDGER_OK;
 }
 
-void GetAccount::Request(const std::string& token,
-                         GetAccountCallback callback) {
-  auto url_callback = std::bind(&GetAccount::OnRequest, this, _1, callback);
+void PostAccount::Request(const std::string& token,
+                         PostAccountCallback callback) {
+  auto url_callback = std::bind(&PostAccount::OnRequest, this, _1, callback);
   auto request = type::UrlRequest::New();
   request->url = GetUrl();
   request->headers = RequestAuthorization(token);
+  request->method = type::UrlMethod::POST;
   ledger_->LoadURL(std::move(request), url_callback);
 }
 
-void GetAccount::OnRequest(const type::UrlResponse& response,
-                           GetAccountCallback callback) {
+void PostAccount::OnRequest(const type::UrlResponse& response,
+                           PostAccountCallback callback) {
   ledger::LogUrlResponse(__func__, response);
 
   type::Result result = CheckStatusCode(response.status_code);

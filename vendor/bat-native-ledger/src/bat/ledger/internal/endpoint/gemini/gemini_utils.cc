@@ -14,8 +14,11 @@ namespace ledger {
 namespace endpoint {
 namespace gemini {
 
-const char kUrlStaging[] = "https://exchange.sandbox.gemini.com";
-const char kUrlProduction[] = "https://exchange.gemini.com";
+const char kOauthUrlStaging[] = "https://exchange.sandbox.gemini.com";
+const char kOauthUrlProduction[] = "https://exchange.gemini.com";
+
+const char kApiUrlStaging[] = "https://api.sandbox.gemini.com";
+const char kApiUrlProduction[] = "https://api.gemini.com";
 
 std::string GetClientId() {
   return ::ledger::gemini::GetClientId();
@@ -45,14 +48,27 @@ std::vector<std::string> RequestAuthorization(const std::string& token) {
   return headers;
 }
 
-std::string GetServerUrl(const std::string& path) {
+std::string GetApiServerUrl(const std::string& path) {
   DCHECK(!path.empty());
 
   std::string url;
   if (ledger::_environment == type::Environment::PRODUCTION) {
-    url = kUrlProduction;
+    url = kApiUrlProduction;
   } else {
-    url = kUrlStaging;
+    url = kApiUrlStaging;
+  }
+
+  return url + path;
+}
+
+std::string GetOauthServerUrl(const std::string& path) {
+  DCHECK(!path.empty());
+
+  std::string url;
+  if (ledger::_environment == type::Environment::PRODUCTION) {
+    url = kOauthUrlProduction;
+  } else {
+    url = kOauthUrlStaging;
   }
 
   return url + path;

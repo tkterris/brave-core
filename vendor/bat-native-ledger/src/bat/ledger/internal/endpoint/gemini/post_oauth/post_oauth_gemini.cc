@@ -29,7 +29,7 @@ PostOauth::PostOauth(LedgerImpl* ledger) : ledger_(ledger) {
 PostOauth::~PostOauth() = default;
 
 std::string PostOauth::GetUrl() {
-  return GetServerUrl("/auth/token");
+  return GetOauthServerUrl("/auth/token");
 }
 
 std::string PostOauth::GeneratePayload(const std::string& external_account_id,

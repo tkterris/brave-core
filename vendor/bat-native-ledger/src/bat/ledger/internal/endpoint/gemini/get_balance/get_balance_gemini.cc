@@ -27,7 +27,7 @@ GetBalance::GetBalance(LedgerImpl* ledger) : ledger_(ledger) {
 GetBalance::~GetBalance() = default;
 
 std::string GetBalance::GetUrl() {
-  return GetServerUrl("/api/link/v1/account/inventory");
+  return GetApiServerUrl("/api/link/v1/account/inventory");
 }
 
 type::Result GetBalance::CheckStatusCode(const int status_code) {

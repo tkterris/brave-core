@@ -29,7 +29,7 @@ class GeminiAuthorization {
                  ledger::ExternalWalletAuthorizationCallback callback);
 
  private:
-  void OnGetAccount(const type::Result result,
+  void OnPostAccount(const type::Result result,
                     const std::string& token,
                     const std::string& address,
                     const std::string& linking_info,

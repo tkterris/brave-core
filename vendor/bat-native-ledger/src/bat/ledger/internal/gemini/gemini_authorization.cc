@@ -138,12 +138,12 @@ void GeminiAuthorization::OnAuthorize(
     callback(type::Result::LEDGER_ERROR, {});
     return;
   }
-  auto url_callback = std::bind(&GeminiAuthorization::OnGetAccount, this, _1, _2, _3,
+  auto url_callback = std::bind(&GeminiAuthorization::OnPostAccount, this, _1, _2, _3,
                                 token, callback);
-  gemini_server_->get_account()->Request(token, url_callback);
+  gemini_server_->post_account()->Request(token, url_callback);
 }
 
-void GeminiAuthorization::OnGetAccount(
+void GeminiAuthorization::OnPostAccount(
     const type::Result result,
     const std::string& address,
     const std::string& linking_info,
@@ -162,8 +162,26 @@ void GeminiAuthorization::OnGetAccount(
     return;
   }
 
-  auto url_callback = std::bind(&GeminiAuthorization::OnClaimWallet, this, _1, token, callback);
-  promotion_server_->post_claim_gemini()->Request(address, linking_info, url_callback);
+  callback(type::Result::LEDGER_OK, {});
+
+  auto wallet_ptr = GetWallet(ledger_);
+
+  wallet_ptr->token = token;
+
+  switch (wallet_ptr->status) {
+    case type::WalletStatus::NOT_CONNECTED:
+    case type::WalletStatus::DISCONNECTED_NOT_VERIFIED:
+    case type::WalletStatus::DISCONNECTED_VERIFIED:
+      wallet_ptr->status = type::WalletStatus::VERIFIED;
+      break;
+    default:
+      break;
+  }
+
+  ledger_->gemini()->SetWallet(wallet_ptr->Clone());
+
+  /*auto url_callback = std::bind(&GeminiAuthorization::OnClaimWallet, this, _1, token, callback);
+  promotion_server_->post_claim_gemini()->Request(address, linking_info, url_callback);*/
 }
 
 void GeminiAuthorization::OnClaimWallet(
