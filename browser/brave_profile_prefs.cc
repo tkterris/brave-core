@@ -312,7 +312,7 @@ void RegisterProfilePrefs(user_prefs::PrefRegistrySyncable* registry) {
                            : BraveWalletWeb3ProviderTypes::ASK));
   registry->RegisterBooleanPref(kLoadCryptoWalletsOnStartup, false);
   registry->RegisterBooleanPref(kOptedIntoCryptoWallets, false);
-  registry->RegisterBooleanPref(kShowWalletIcon, true);
+  registry->RegisterBooleanPref(kShowWalletIconOnToolbar, true);
 #endif
 
   // Binance widget
