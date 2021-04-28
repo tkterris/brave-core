@@ -77,7 +77,6 @@ Polymer({
         this.fire('close');
         return;
       }
-      console.log("name invalid")
       this.isNameValid_ = false;
     });
   },

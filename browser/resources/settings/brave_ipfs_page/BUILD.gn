@@ -13,8 +13,8 @@ import("../settings.gni")
 group("web_modules") {
   public_deps = [
     ":brave_ipfs_page_module",
-    ":p2p_keys_subpage_module",
     ":modules",
+    ":p2p_keys_subpage_module",
     ":templatize",
   ]
 }

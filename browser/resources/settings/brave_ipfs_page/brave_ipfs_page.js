@@ -33,16 +33,17 @@ Polymer({
   properties: {
     ipfsEnabled_: Boolean,
     showChangeIPFSGatewayDialog_: Boolean,
-    isStorageMaxEnabled_: Boolean,
+    isLocalNodeEnabled_: Boolean,
+    isLocalNodeLaunched_: {
+      type: Boolean,
+      value: false,
+    },
     showIPFSLearnMoreLink_: Boolean,
     mainBlockVisibility_: String
   },
 
   /** @private {?settings.BraveIPFSBrowserProxy} */
   browserProxy_: null,
-
-  /** @private {?IPFSResolveMethodTypes} */
-  lastUsedMethod_: null,
 
   /** @override */
   created: function() {
@@ -61,24 +62,30 @@ Polymer({
     });
     this.browserProxy_.getIPFSEnabled().then(enabled => {
       this.ipfsEnabled_ = enabled
+      
     });
+
+    this.addWebUIListener('brave-ipfs-node-status-changed', (launched) => {
+      this.isLocalNodeLaunched_ = launched
+    })
 
     window.addEventListener('load', this.onLoad_.bind(this));
   },
 
-  onLoad_: function() {
+  setupOptionsVisibility: function() {
     const resolve_method = this.getPref('brave.ipfs.resolve_method').value;
-    this.lastUsedMethod_ = resolve_method;
-    let is_local_node = (resolve_method ==
-      this.IPFSResolveMethodTypes.IPFS_LOCAL);
-    this.isStorageMaxEnabled_ = is_local_node;
+    // Check if IPFS method is LOCAL_NODE
+    this.isLocalNodeEnabled_ = (resolve_method == this.IPFSResolveMethodTypes.IPFS_LOCAL) && 
+                                this.ipfsEnabled_;
     this.showIPFSLearnMoreLink_ =
-      (resolve_method ==
-        this.IPFSResolveMethodTypes.IPFS_ASK);
-
+      (resolve_method == this.IPFSResolveMethodTypes.IPFS_ASK);
     this.$.ipfsStorageMax.value =
       this.getPref('brave.ipfs.storage_max').value;
-    if (this.isKeysEditorRoute() && !is_local_node) {
+  },
+
+  onLoad_: function() {
+    this.setupOptionsVisibility();
+    if (this.isKeysEditorRoute() && !this.isLocalNodeEnabled_) {
       const router = Router.getInstance();
       router.navigateTo(router.getRoutes().BRAVE_IPFS);
     }
@@ -90,21 +97,16 @@ Polymer({
   },
 
   onChangeIpfsMethod_: function() {
-    const resolve_method = this.getPref('brave.ipfs.resolve_method').value;
-    // Check if IPFS method is LOCAL_NODE
-    const local_node = (resolve_method == this.IPFSResolveMethodTypes.IPFS_LOCAL);
-    // Check if IPFS method is ASK
-    this.showIPFSLearnMoreLink_ =
-      (resolve_method ==
-        this.IPFSResolveMethodTypes.IPFS_ASK);
-
-    this.isStorageMaxEnabled_ = local_node;
-    if (local_node) {
-      this.browserProxy_.launchIPFSService().then(success => {});
-    } else if (this.lastUsedMethod_ == this.IPFSResolveMethodTypes.IPFS_LOCAL) {
+    let local_node_used = this.isLocalNodeEnabled_
+    this.setupOptionsVisibility();
+    // Automatically start node if we changed method to local node
+    if (!local_node_used && this.isLocalNodeEnabled_) {
+      this.browserProxy_.launchIPFSService().then(success => {
+        this.isLocalNodeLaunched_ = success
+      });
+    } else if (local_node_used && !this.isLocalNodeEnabled_) {
       this.browserProxy_.shutdownIPFSService();
     }
-    this.lastUsedMethod_ = resolve_method;
   },
 
   isKeysEditorRoute: function () {

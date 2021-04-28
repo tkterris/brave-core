@@ -14,7 +14,8 @@ Polymer({
   is: 'settings-p2p-keys-subpage',
 
   behaviors: [
-    I18nBehavior
+    I18nBehavior,
+    WebUIListenerBehavior
   ],
 
   properties: {
@@ -28,36 +29,62 @@ Polymer({
         return [];
       },
     },
+    localNodeMethod: {
+      type: Boolean,
+      value: false,
+      reflectToAttribute: true
+    },
+    localNodeLaunched: {
+      type: Boolean,
+      value: false
+    },
+    launchNodeButtonEnabled_: {
+      type: Boolean,
+      value: true,
+    },
+    localNodeLaunchError_: {
+      type: Boolean,
+      value: false,
+    },
     showAddp2pKeyDialog_: {
       type: Boolean,
       value: false,
     }
   },
-  
-  activeDialogAnchor_: null,
-  /** @private {?SyncBrowserProxy} */
-  
+
   browserProxy_: null,
 
   /** @override */
   created: function() {
     this.browserProxy_ = settings.BraveIPFSBrowserProxyImpl.getInstance();
+    this.addWebUIListener('brave-ipfs-node-status-changed', (launched) => {
+      this.onServiceLaunched(launched)
+    })
+  },
+  
+  onServiceLaunched: function(success) {
+    this.launchNodeButtonEnabled_ = true;
+    this.localNodeLaunched = success
+    if (success) {
+      this.localNodeLaunchError_ = false;
+      this.updateKeys();
+    } else {
+      this.showAddp2pKeyDialog_ = false
+    }
+  },
+
+  onStartNodeKeyTap_: function() {
+    this.launchNodeButtonEnabled_ = false;
+    this.browserProxy_.launchIPFSService().then((success) => {
+      this.localNodeLaunchError_ = !success;
+      this.onServiceLaunched(success)
+    });
   },
 
   /*++++++
   * @override */
   ready: function() {
-    this.browserProxy_.launchIPFSService().then(
-      this.onServiceLaunched_.bind(this));
-  },
-  
-  onServiceLaunched_: function(success) {
-    if (!success) {
-      const router = Router.getInstance();
-      router.navigateTo(router.getRoutes().BRAVE_IPFS);
-      return;
-    }
-    this.updateKeys();
+    this.onServiceLaunched(this.localNodeLaunched)
   },
 
   isDefaultKey_: function(name) {

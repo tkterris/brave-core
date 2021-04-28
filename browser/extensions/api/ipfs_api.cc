@@ -40,8 +40,7 @@ base::Value MakeSelectValue(const base::string16& name,
   return item;
 }
 
-base::Value MakeValue(const std::string& name,
-                      const std::string& value) {
+base::Value MakeValue(const std::string& name, const std::string& value) {
   base::Value item(base::Value::Type::DICTIONARY);
   item.SetKey("value", base::Value(value));
   item.SetKey("name", base::Value(name));
@@ -64,7 +63,7 @@ namespace api {
 
 ExtensionFunction::ResponseAction IpfsRemoveIpnsKeyFunction::Run() {
   if (!IsIpfsEnabled(browser_context()))
-      return RespondNow(Error("IPFS not enabled"));
+    return RespondNow(Error("IPFS not enabled"));
   ::ipfs::IpfsService* ipfs_service = GetIpfsService(browser_context());
   if (!ipfs_service) {
     return RespondNow(Error("Could not obtain IPFS service"));
@@ -76,14 +75,16 @@ ExtensionFunction::ResponseAction IpfsRemoveIpnsKeyFunction::Run() {
   std::unique_ptr<ipfs::RemoveIpnsKey::Params> params(
       ipfs::RemoveIpnsKey::Params::Create(*args_));
   EXTENSION_FUNCTION_VALIDATE(params.get());
-  key_manager->RemoveKey(params->name, base::BindOnce(
-      &IpfsRemoveIpnsKeyFunction::OnKeyRemoved, base::Unretained(this), key_manager));
+  key_manager->RemoveKey(
+      params->name, base::BindOnce(&IpfsRemoveIpnsKeyFunction::OnKeyRemoved,
+                                   base::Unretained(this), key_manager));
   AddRef();
   return RespondLater();
 }
 
 void IpfsRemoveIpnsKeyFunction::OnKeyRemoved(::ipfs::IpnsKeysManager* manager,
-    const std::string& name, bool success) {
+                                             const std::string& name,
+                                             bool success) {
   DCHECK(manager);
   if (!success) {
     Respond(Error("Unable to remove key"));
@@ -96,7 +97,7 @@ void IpfsRemoveIpnsKeyFunction::OnKeyRemoved(::ipfs::IpnsKeysManager* manager,
 
 ExtensionFunction::ResponseAction IpfsAddIpnsKeyFunction::Run() {
   if (!IsIpfsEnabled(browser_context()))
-      return RespondNow(Error("IPFS not enabled"));
+    return RespondNow(Error("IPFS not enabled"));
   ::ipfs::IpfsService* ipfs_service = GetIpfsService(browser_context());
   if (!ipfs_service) {
     return RespondNow(Error("Could not obtain IPFS service"));
@@ -108,14 +109,17 @@ ExtensionFunction::ResponseAction IpfsAddIpnsKeyFunction::Run() {
   std::unique_ptr<ipfs::AddIpnsKey::Params> params(
       ipfs::AddIpnsKey::Params::Create(*args_));
   EXTENSION_FUNCTION_VALIDATE(params.get());
-  key_manager->GenerateNewKey(params->name, base::BindOnce(
-      &IpfsAddIpnsKeyFunction::OnKeyCreated, base::Unretained(this), key_manager));
+  key_manager->GenerateNewKey(
+      params->name, base::BindOnce(&IpfsAddIpnsKeyFunction::OnKeyCreated,
+                                   base::Unretained(this), key_manager));
   AddRef();
   return RespondLater();
 }
 
 void IpfsAddIpnsKeyFunction::OnKeyCreated(::ipfs::IpnsKeysManager* manager,
-    bool success, const std::string& name, const std::string& value) {
+                                          bool success,
+                                          const std::string& name,
+                                          const std::string& value) {
   DCHECK(manager);
   if (!success) {
     Respond(Error("Unable to create key"));
@@ -130,7 +134,7 @@ void IpfsAddIpnsKeyFunction::OnKeyCreated(::ipfs::IpnsKeysManager* manager,
 
 ExtensionFunction::ResponseAction IpfsGetIpnsKeysListFunction::Run() {
   if (!IsIpfsEnabled(browser_context()))
-      return RespondNow(Error("IPFS not enabled"));
+    return RespondNow(Error("IPFS not enabled"));
   ::ipfs::IpfsService* ipfs_service = GetIpfsService(browser_context());
   if (!ipfs_service) {
     return RespondNow(Error("Could not obtain IPFS service"));
@@ -141,8 +145,9 @@ ExtensionFunction::ResponseAction IpfsGetIpnsKeysListFunction::Run() {
   }
   const auto& keys = key_manager->GetKeys();
   if (!keys.size()) {
-    key_manager->LoadKeys(base::BindOnce(
-        &IpfsGetIpnsKeysListFunction::OnKeysLoaded, base::Unretained(this), key_manager));
+    key_manager->LoadKeys(
+        base::BindOnce(&IpfsGetIpnsKeysListFunction::OnKeysLoaded,
+                       base::Unretained(this), key_manager));
     AddRef();
     return RespondLater();
   }

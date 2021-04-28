@@ -278,6 +278,9 @@ void BraveAddCommonStrings(content::WebUIDataSource* html_source,
     {"ipfsAddKeyDialogTitle", IDS_SETTINGS_IPNS_ADD_KEY_DIALOG_TITLE},
     {"ipfsAddKeyDialogError", IDS_SETTINGS_IPNS_ADD_KEY_DIALOG_ERROR},
     {"ipfsDeleteKeyConfirmation", IDS_SETTINGS_IPNS_DELETE_KEY_CONFIRMATION},
+    {"ipfsKeysNodeNotLaunched", IDS_SETTINGS_IPNS_KEYS_NODE_NOT_LAUNCHED},
+    {"ipfsKeysStartNode", IDS_SETTINGS_IPNS_KEYS_START_NODE},
+    {"ipfsKeysNodeLaunchError", IDS_SETTINGS_IPNS_KEYS_START_NODE_ERROR},
   };
   html_source->AddLocalizedStrings(localized_strings);
   html_source->AddString("webRTCLearnMoreURL",

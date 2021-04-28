@@ -45,7 +45,9 @@ class IpfsAddIpnsKeyFunction : public ExtensionFunction {
 
  protected:
   void OnKeyCreated(::ipfs::IpnsKeysManager* manager,
-    bool result, const std::string& name, const std::string& value);
+                    bool result,
+                    const std::string& name,
+                    const std::string& value);
 
   ~IpfsAddIpnsKeyFunction() override {}
   ResponseAction Run() override;

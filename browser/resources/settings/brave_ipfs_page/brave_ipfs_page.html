@@ -87,7 +87,7 @@
         on-settings-boolean-control-change="onIPFSCompanionEnabledChange_">
       </settings-toggle-button>
 
-      <div class="settings-box" hidden="[[!isStorageMaxEnabled_]]">
+      <div class="settings-box" hidden="[[!isLocalNodeEnabled_]]">
         <div class="flex cr-padded-text">
           <div>$i18n{changeIpfsStorageMaxLabel}</div>
           <div class="secondary">$i18n{changeIpfsStorageMaxDesc}</div>
@@ -103,7 +103,7 @@
       </div>
     </div>
     <settings-animated-pages id="p2p-keys" section="ipfs">
-      <div route-path="default">
+      <div route-path="default" hidden="[[!isLocalNodeLaunched_]]">
         <cr-link-row id="p2pKeysLinkRow" start-icon="settings20:vpn-key"
           class="hr" label="$i18n{ipfsIpnsKeysLinkTitle}"
           sub-label="[[ipfsIpnsKeysLinkTitleDesc]]"
@@ -115,7 +115,7 @@
         <settings-subpage
           associated-control="[[$$('#p2pKeysLinkRow')]]"
           page-title="$i18n{ipfsIpnsKeysLinkTitle}">
-          <settings-p2p-keys-subpage pref="{{prefs.brave.ipfs.resolve_method}}">
+          <settings-p2p-keys-subpage local-node-method="[[isLocalNodeEnabled_]]" local-node-launched="[[isLocalNodeLaunched_]]">
           </settings-p2p-keys-subpage>
         </settings-subpage>
       </template>

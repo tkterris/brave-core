@@ -23,6 +23,9 @@
     display: flex;
     padding: 8px 1em;
   }
+  .error-text {
+    color: red;
+  }
   #keys-section {
     display: block;
     background-color: var(--cr-card-background-color);
@@ -33,13 +36,26 @@
   }
 </style>
 
-<div id="keys-section" class="flex-container">
-  <div id="category" class="flex">
+<div id="keys-section" class="flex-container" hidden=[[!localNodeMethod]]>
+  <div class="flex" hidden="[[localNodeLaunched]]">
+    <div class="settings-row">
+      <div class="flex cr-padded-text">
+          <div>$i18n{ipfsKeysNodeNotLaunched}</div>
+          <div class="secondary error-text" hidden="[[!localNodeLaunchError_]]">
+            $i18nRaw{ipfsKeysNodeLaunchError}
+          </div>
+      </div>
+      <cr-button on-click="onStartNodeKeyTap_" disabled=[[!launchNodeButtonEnabled_]]>
+        $i18n{ipfsKeysStartNode}
+      </cr-button>
+    </div>
+  </div>
+  <div class="flex" hidden="[[!localNodeLaunched]]">
     <div class="settings-row">
       <div class="flex cr-padded-text">
           $i18n{ipfsKeysListTitle}
       </div>
-      <cr-button id="addSite" on-click="onAddKeyTap_">
+      <cr-button on-click="onAddKeyTap_" >
         $i18n{add}
       </cr-button>
     </div>
