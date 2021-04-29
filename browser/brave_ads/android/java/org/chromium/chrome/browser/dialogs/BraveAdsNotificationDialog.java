@@ -104,9 +104,9 @@ public class BraveAdsNotificationDialog {
                                 if (deltaY > MIN_DISTANCE) {
                                     mAdsDialog.dismiss();
                                     mAdsDialog = null;
-                                    BraveAdsNativeHelper.nativeAdNotificationDismissed(
-                                            Profile.getLastUsedRegularProfile(), mNotificationId,
-                                            true);
+                                    BraveAdsNativeHelper.nativeOnCloseAdNotification(
+                                            Profile.getLastUsedRegularProfile(),
+                                            mNotificationId, false);
                                     mNotificationId = null;
                                 } else {
                                     // Reset back to starting position
@@ -157,7 +157,8 @@ public class BraveAdsNotificationDialog {
         try {
             if (mNotificationId != null && mNotificationId.equals(notificationId) && mAdsDialog != null) {
                 mAdsDialog.dismiss();
-                BraveAdsNativeHelper.nativeAdNotificationDismissed(Profile.getLastUsedRegularProfile(), mNotificationId, false);
+                BraveAdsNativeHelper.nativeOnCloseAdNotification(
+                        Profile.getLastUsedRegularProfile(), mNotificationId, false);
                 mAdsDialog = null;
             }
         } catch (IllegalArgumentException e) {
