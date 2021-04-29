@@ -12,9 +12,11 @@
 #include <vector>
 
 #include "base/macros.h"
-#include "base/synchronization/lock.h"
 #include "base/strings/string16.h"
+#include "base/synchronization/lock.h"
+#include "brave/components/brave_shields/common/brave_shields.mojom.h"
 #include "content/public/browser/web_contents_observer.h"
+#include "content/public/browser/web_contents_receiver_set.h"
 #include "content/public/browser/web_contents_user_data.h"
 
 namespace content {
@@ -25,8 +27,10 @@ class PrefRegistrySimple;
 
 namespace brave_shields {
 
-class BraveShieldsWebContentsObserver : public content::WebContentsObserver,
-    public content::WebContentsUserData<BraveShieldsWebContentsObserver> {
+class BraveShieldsWebContentsObserver
+    : public content::WebContentsObserver,
+      public content::WebContentsUserData<BraveShieldsWebContentsObserver>,
+      public brave_shields::mojom::BraveShieldsHost {
  public:
   explicit BraveShieldsWebContentsObserver(content::WebContents*);
   ~BraveShieldsWebContentsObserver() override;
@@ -75,15 +79,9 @@ class BraveShieldsWebContentsObserver : public content::WebContentsObserver,
   void DidFinishNavigation(
       content::NavigationHandle* navigation_handle) override;
 
-  // Invoked if an IPC message is coming from a specific RenderFrameHost.
-  bool OnMessageReceived(const IPC::Message& message,
-      content::RenderFrameHost* render_frame_host) override;
-  void OnJavaScriptBlockedWithDetail(
-      content::RenderFrameHost* render_frame_host,
-      const base::string16& details);
-  void OnFingerprintingBlockedWithDetail(
-      content::RenderFrameHost* render_frame_host,
-      const base::string16& details);
+  // brave_shields::mojom::BraveShieldsHost.
+  void OnJavaScriptBlocked(const base::string16& details) override;
+  void OnFingerprintingBlocked(const base::string16& details) override;
 
   // TODO(iefremov): Refactor this away or at least put into base::NoDestructor.
   // Protects global maps below from being concurrently written on the UI thread
@@ -98,6 +96,9 @@ class BraveShieldsWebContentsObserver : public content::WebContentsObserver,
   // We keep a set of the current page's blocked URLs in case the page
   // continually tries to load the same blocked URLs.
   std::set<std::string> blocked_url_paths_;
+
+  content::WebContentsFrameReceiverSet<brave_shields::mojom::BraveShieldsHost>
+      brave_shields_receivers_;
 
   WEB_CONTENTS_USER_DATA_KEY_DECL();
   DISALLOW_COPY_AND_ASSIGN(BraveShieldsWebContentsObserver);
