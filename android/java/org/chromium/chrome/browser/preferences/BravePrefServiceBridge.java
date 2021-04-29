@@ -81,7 +81,11 @@ public class BravePrefServiceBridge {
      */
     public void setFingerprintingProtectionEnabled(boolean enabled) {
         BravePrefServiceBridgeJni.get().setFingerprintingProtectionEnabled(enabled);
-    }
+    }    
+
+    public void setCosmeticFilteringControlType(int type) {
+        BravePrefServiceBridgeJni.get().setCosmeticFilteringControlType(type);
+    }  
 
     public void setPlayYTVideoInBrowserEnabled(boolean enabled) {
         BravePrefServiceBridgeJni.get().setPlayYTVideoInBrowserEnabled(enabled);
@@ -228,6 +232,8 @@ public class BravePrefServiceBridge {
 
     @NativeMethods
     interface Natives {
+        void setCosmeticFilteringControlType(int type);
+
         void setHTTPSEEnabled(boolean enabled);
         void setIpfsGatewayEnabled(boolean enabled);
         void setAdBlockEnabled(boolean enabled);

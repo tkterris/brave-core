@@ -610,6 +610,7 @@ brave_java_resources = [
   "java/res/drawable/ic_onboarding_graphic_completed.xml",
   "java/res/drawable/ic_onboarding_graphic_tipping.xml",
   "java/res/drawable/ic_password.xml",
+  "java/res/drawable/ic_homepage.xml",
   "java/res/drawable/ic_payment_methods.xml",
   "java/res/drawable/ic_phone.xml",
   "java/res/drawable/ic_privacy_reports.xml",

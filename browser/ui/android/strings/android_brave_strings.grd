@@ -147,6 +147,9 @@ This file contains all "about" strings.  It is set to NOT be translated, in tran
       </message>
       <message name="IDS_BRAVE_SHIELDS_HTTPS_EVERYWHERE_SWITCH" desc="Switch for HTTPS Everywhere.">
         Upgrade connections to HTTPS
+      </message>      
+      <message name="IDS_BRAVE_SHIELDS_HTTPS_EVERYWHERE_SWITCH_SUMMARY" desc="Summary for HTTPS Everywhere.">
+        Opens some sites using a secure HTTPS connection instead of plain HTTP.
       </message>
       <message name="IDS_BRAVE_SHIELDS_BLOCKS_SCRIPTS_SWITCH" desc="Switch for Block Scripts.">
         Block Scripts
@@ -250,9 +253,13 @@ This file contains all "about" strings.  It is set to NOT be translated, in tran
       <message name="IDS_CLOSE_TABS_ON_EXIT_TITLE" desc="Title for closing tabs on exit.">
         Close tabs on exit
       </message>      
-      <message name="IDS_BLOCK_TRACKERS_ADS_TITLE" desc="Title for Block trackers and ads tabs on exit.">
+      <message name="IDS_BLOCK_TRACKERS_ADS_TITLE" desc="Title for Block trackers and ads.">
         Block trackers &amp; ads
       </message>
+      <message name="IDS_BLOCK_TRACKERS_ADS_SUMMARY" desc="Text summary for Block trackers and ads.">
+        Prevents ads, popups, and trackers from loading
+      </message>      
+
       <message name="IDS_CLOSE_TABS_ON_EXIT_SUMMARY" desc="Summary for closing tabs on exit.">
         Don't persist tabs between browsing sessions
       </message>
@@ -298,8 +305,8 @@ This file contains all "about" strings.  It is set to NOT be translated, in tran
       <message name="IDS_PREFS_SECTION_OTHER_PRIVACY_SETTINGS" desc="Title for Other privacy settings section in the privacy preferences screen">
         Other privacy settings
       </message>      
-      <message name="IDS_PREFS_SECTION_CLEAR_DATA_AUTOMATICALLY" desc="Title for Clear private data automatically section in the privacy preferences screen">
-        Clear private data automatically
+      <message name="IDS_PREFS_SECTION_CLEAR_DATA" desc="Title for Clear private data automatically section in the privacy preferences screen">
+        Clear browsing data
       </message>     
       <message name="IDS_PREFS_CLEAR_DATA_BUTTON" desc="Title for Clear private data button in the privacy preferences screen">
         Clear private data
@@ -1053,6 +1060,18 @@ until they verify, or until 90 days have passed.
       <message name="IDS_SPONSORED_IMAGES_BOTTOM_SHEET_TEXT" desc="Text for SI bottom sheet.">
         For every sponsored image you view, you receive 70% of the revenue in tokens. With Brave Ads, you're always in control of the ads you see.
       </message>
+      <message name="IDS_BLOCK_TRACKERS_ADS_OPTION_1" desc="Text for block trackers and ads option.">
+        Block trackers &amp; ads (Aggressive)  
+      </message>
+      <message name="IDS_BLOCK_TRACKERS_ADS_OPTION_2" desc="Text for block trackers and ads  option.">
+        Block trackers &amp; ads (Standard)  
+      </message>
+      <message name="IDS_BLOCK_TRACKERS_ADS_OPTION_3" desc="Text for block trackers and ads  option.">
+        Allow all trackers &amp; ads
+      </message>        
+      <message name="IDS_BLOCK_TRACKERS_ADS_ALLOW_ALL" desc="Text for block trackers and ads  option.">
+        Allow all
+      </message>            
       <message name="IDS_BLOCK_CROSS_SITE_COOKIES" desc="Title for shields option.">
         Block cross-site cookies
       </message>
@@ -1347,23 +1366,11 @@ until they verify, or until 90 days have passed.
       <message name="IDS_CLEAR_BRAVE_STATS_DATA" desc="Brave stats pref summary text">
         Clear all privacy reports data
       </message>      
-      <message name="IDS_CLEAR_DATA_FREQUENCY" desc="Brave clear data frequency pref text">
-        Clear data frequency
-      </message>      
-      <message name="IDS_CLEAR_BROWSING_HISTORY" desc="Brave clear browsing history pref text">
-        Browsing history
-      </message>    
-      <message name="IDS_CLEAR_CACHE" desc="Brave clear cache  pref text">
-        Cache
-      </message>     
-      <message name="IDS_CLEAR_COOKIES" desc="Brave clear cookies  pref text">
-        Clear cookies and Site data
+      <message name="IDS_CLEAR_ON_EXIT" desc="Brave clear data on exit pref title">
+        Clear data on exit
       </message>        
-      <message name="IDS_CLEAR_DOWNLOADED_FILES" desc="Brave clear downloaded cookies  pref text">
-        Downloaded files
-      </message>      
-      <message name="IDS_SAVED_LOGINS" desc="Brave clear cookies  pref text">
-        Saved Logins
+      <message name="IDS_CLEAR_ON_EXIT_SUMMARY" desc="Brave clear data on exit pref text">
+        Clears all browsing data
       </message>
       <message name="IDS_RESETS_YOUR_BRAVE_STATS" desc="Brave stats pref summary text">
         Resets your privacy reports to zero

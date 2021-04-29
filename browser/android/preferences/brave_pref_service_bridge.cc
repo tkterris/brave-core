@@ -149,6 +149,46 @@ void JNI_BravePrefServiceBridge_SetAdBlockEnabled(
       g_browser_process->local_state());
 }
 
+void JNI_BravePrefServiceBridge_SetCosmeticFilteringControlType(
+    JNIEnv* env,
+    jint type) {
+  switch (type){
+    case 0:
+      brave_shields::SetCosmeticFilteringControlType(
+      HostContentSettingsMapFactory::GetForProfile(
+          GetOriginalProfile()),
+      ControlType::BLOCK,
+      GURL(),
+      g_browser_process->local_state());
+      break;
+    case 1:
+      brave_shields::SetAdControlType(
+      HostContentSettingsMapFactory::GetForProfile(
+          GetOriginalProfile()),
+      ControlType::BLOCK,
+      GURL(),
+      g_browser_process->local_state());
+      break;
+    case 2:
+      brave_shields::SetAdControlType(
+      HostContentSettingsMapFactory::GetForProfile(
+          GetOriginalProfile()),
+      ControlType::ALLOW,
+      GURL(),
+      g_browser_process->local_state());
+      break;
+    default:
+      brave_shields::SetAdControlType(
+      HostContentSettingsMapFactory::GetForProfile(
+          GetOriginalProfile()),
+      ControlType::BLOCK,
+      GURL(),
+      g_browser_process->local_state());
+      break;
+  }
+
+}
+
 void JNI_BravePrefServiceBridge_SetFingerprintingProtectionEnabled(
     JNIEnv* env,
     jboolean enabled) {

@@ -10,14 +10,20 @@
         android:key="brave_shields_globals_section"
         android:title="@string/prefs_section_brave_shields_globals"/>    
 
-        <org.chromium.components.browser_ui.settings.ChromeBasePreference
+<!--         <org.chromium.components.browser_ui.settings.ChromeBasePreference
             android:fragment="org.chromium.chrome.browser.privacy.settings.BraveBlockTrackersAndAdsPreferences"
             android:key="block_trackers_ads"
-            android:title="@string/block_trackers_ads_title"/>            
-        <org.chromium.components.browser_ui.settings.ChromeBaseCheckBoxPreference
+            android:title="@string/block_trackers_ads_title"/>   -->          
+        <ListPreference
+            android:title="@string/block_trackers_ads_title"
+            android:key="block_trackers_ads"
+            android:defaultValue="2"
+            android:entries="@array/listArray"
+            android:entryValues="@array/listValues" />
+        <org.chromium.components.browser_ui.settings.ChromeSwitchPreference
             android:key="httpse"
-            android:title="@string/httpse_title"
-            android:summary="@string/httpse_summary"
+            android:title="@string/brave_shields_https_everywhere_switch"
+            android:summary="@string/brave_shields_https_everywhere_switch_summary"
             android:defaultValue="true" />
         <org.chromium.components.browser_ui.settings.ChromeBasePreference
             android:fragment="org.chromium.chrome.browser.privacy.settings.BraveBlockTrackersAndAdsPreferences"
@@ -25,11 +31,11 @@
             android:summary="@string/brave_shields_blocks_scripts_summary"
             android:defaultValue="true" 
             android:title="@string/brave_shields_blocks_scripts_switch"/>            
-        <org.chromium.components.browser_ui.settings.ChromeBasePreference
+        <org.chromium.components.browser_ui.settings.ChromeSwitchPreference
             android:key="block_cross_site_cookies"
-            android:summary="@string/brave_shields_blocks_scripts_summary"
+            android:summary="@string/block_cookies_text"
             android:title="@string/block_cross_site_cookies"/>        
-        <org.chromium.components.browser_ui.settings.ChromeBaseCheckBoxPreference
+        <org.chromium.components.browser_ui.settings.ChromeBasePreference
             android:key="fingerprinting_protection"
             android:title="@string/fingerprinting_protection_title"
             android:summary="@string/fingerprinting_protection_summary"
@@ -40,37 +46,13 @@
             android:defaultValue="true" />
 
     <PreferenceCategory
-        android:key="clear_data_automatically_section"
-        android:title="@string/prefs_section_clear_data_automatically"/>
-
-        <org.chromium.components.browser_ui.settings.ChromeBasePreference
-            android:key="clear_data_frequency"
-            android:title="@string/clear_data_frequency"
-             />            
+        android:key="clear_data_section"
+        android:title="@string/prefs_section_clear_data"/>          
         <org.chromium.components.browser_ui.settings.ChromeSwitchPreference
-            android:key="browsing_history"
-            android:title="@string/clear_browsing_history"
+            android:key="clear_on_exit"
+            android:title="@string/clear_on_exit"
+            android:summary="@string/clear_on_exit_summary"
             android:defaultValue="true" />        
-        <org.chromium.components.browser_ui.settings.ChromeSwitchPreference
-            android:key="clear_cache"
-            android:title="@string/clear_cache"
-            android:defaultValue="true" />       
-        <org.chromium.components.browser_ui.settings.ChromeSwitchPreference
-            android:key="clear_cookies"
-            android:title="@string/clear_cookies"
-            android:defaultValue="true" />        
-        <org.chromium.components.browser_ui.settings.ChromeSwitchPreference
-            android:key="clear_saved_logins"
-            android:title="@string/saved_logins"
-            android:defaultValue="true" />        
-        <org.chromium.components.browser_ui.settings.ChromeSwitchPreference
-            android:key="clear_downloaded_files"
-            android:title="@string/clear_downloaded_files"
-            android:defaultValue="true" />        
-        <org.chromium.components.browser_ui.settings.ChromeBasePreference
-            android:key="clear_private_data_button"
-            android:summary="@string/prefs_clear_data_text"
-            android:title="@string/prefs_clear_data_button" />
 
 <!--         <org.chromium.components.browser_ui.settings.ChromeSwitchPreference
             android:key="ad_block"
@@ -102,44 +84,50 @@
         <PreferenceCategory
         android:key="other_privacy_settings_section"
         android:title="@string/prefs_section_other_privacy_settings"/>
-                <org.chromium.components.browser_ui.settings.ChromeBasePreference
+        <org.chromium.components.browser_ui.settings.ChromeBasePreference
             android:fragment="org.chromium.chrome.browser.settings.BraveWebrtcPolicyPreferencesFragment"
             android:key="webrtc_policy"
+            android:order="25"
             android:title="@string/settings_webrtc_policy_label"
             android:persistent="false"/>
-                <org.chromium.components.browser_ui.settings.ChromeBaseCheckBoxPreference
+        <org.chromium.components.browser_ui.settings.ChromeSwitchPreference
             android:key="close_tabs_on_exit"
+            android:order="25"
             android:title="@string/close_tabs_on_exit_title"
             android:summary="@string/close_tabs_on_exit_summary" />
-                <Preference
+<!--                 <Preference
             android:fragment="org.chromium.chrome.browser.decentralized_dns.settings.UnstoppableDomainsSettingsFragment"
             android:key="unstoppable_domains"
-            android:title="@string/unstoppable_domains_title" />
-                <org.chromium.components.browser_ui.settings.ChromeSwitchPreference
+            android:title="@string/unstoppable_domains_title" /> -->
+        <org.chromium.components.browser_ui.settings.ChromeSwitchPreference
             android:key="search_suggestions"
             android:title="@string/autocomplete_searches_and_urls_title"
+            android:order="25"
             android:summary="@string/autocomplete_searches_and_urls_summary"
             android:persistent="false"/>
         <org.chromium.components.browser_ui.settings.ChromeSwitchPreference
             android:key="autocomplete_top_sites"
+            android:order="25"
             android:title="@string/autocomplete_top_sites_title"
             android:persistent="false"/>
         <org.chromium.components.browser_ui.settings.ChromeSwitchPreference
             android:key="autocomplete_brave_suggested_sites"
             android:title="@string/autocomplete_brave_suggested_sites_title"
+            android:order="25"
             android:persistent="false"/>
-        <org.chromium.components.browser_ui.settings.ChromeBaseCheckBoxPreference
+        <org.chromium.components.browser_ui.settings.ChromeSwitchPreference
             android:key="send_p3a_analytics"
+            android:order="25"
             android:title="@string/send_p3a_analytics_title"
             android:summary="@string/send_p3a_analytics_summary"
             android:defaultValue="false" />            
-        <org.chromium.components.browser_ui.settings.ChromeBaseCheckBoxPreference
+<!--         <org.chromium.components.browser_ui.settings.ChromeBaseCheckBoxPreference
             android:key="ipfs_gateway"
             android:title="@string/ipfs_gateway_title"
             android:summary="@string/ipfs_gateway_summary"
-            android:defaultValue="true" />            
-                <Preference
+            android:defaultValue="true" />     -->        
+<!--                 <Preference
             android:fragment="org.chromium.chrome.browser.decentralized_dns.settings.ENSSettingsFragment"
             android:key="ens"
-            android:title="@string/ens_title" />
+            android:title="@string/ens_title" /> -->
 </PreferenceScreen>

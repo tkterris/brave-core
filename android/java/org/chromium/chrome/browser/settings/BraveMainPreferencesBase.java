@@ -70,7 +70,6 @@ public class BraveMainPreferencesBase
     private static final String PREF_APPEARANCE = "appearance";
     private static final String PREF_NEW_TAB_PAGE = "background_images";
     private static final String PREF_WELCOME_TOUR = "welcome_tour";
-    private static final String PREF_REPORT_BROKEN_SITE = "report_broken_site";
     private static final String PREF_ACCESSIBILITY = "accessibility";
     private static final String PREF_CONTENT_SETTINGS = "content_settings";
     private static final String PREF_ABOUT_CHROME = "about_chrome";
@@ -124,9 +123,9 @@ public class BraveMainPreferencesBase
         removePreferenceIfPresent(MainSettings.PREF_SAFETY_CHECK);
         removePreferenceIfPresent(PREF_LANGUAGES);
         removePreferenceIfPresent(PREF_BASICS_SECTION);
-        removePreferenceIfPresent(PREF_HOMEPAGE);
+        // removePreferenceIfPresent(PREF_HOMEPAGE);
 
-        removePreferenceIfPresent(PREF_USE_CUSTOM_TABS);
+        // removePreferenceIfPresent(PREF_USE_CUSTOM_TABS);
         removePreferenceIfPresent(PREF_ADVANCED_SECTION);
         removePreferenceIfPresent(PREF_PRIVACY);
 
@@ -179,6 +178,7 @@ public class BraveMainPreferencesBase
         findPreference(PREF_GENERAL_SECTION).setOrder(++generalOrder);
 
         findPreference(PREF_BRAVE_SEARCH_ENGINES).setOrder(++generalOrder);
+        findPreference(PREF_HOMEPAGE).setOrder(++generalOrder);
         findPreference(PREF_PASSWORDS).setOrder(++generalOrder);
         findPreference(PREF_SYNC).setOrder(++generalOrder);
         findPreference(PREF_BRAVE_STATS).setOrder(++generalOrder);
@@ -189,6 +189,11 @@ public class BraveMainPreferencesBase
         findPreference(PREF_CONTENT_SETTINGS).setOrder(++generalOrder);
         findPreference(PREF_DOWNLOADS).setOrder(++generalOrder);
         findPreference(PREF_CLOSING_ALL_TABS_CLOSES_BRAVE).setOrder(++generalOrder);
+        if (DeviceFormFactor.isTablet()) {
+            removePreferenceIfPresent(PREF_USE_CUSTOM_TABS);
+        } else {
+            findPreference(PREF_USE_CUSTOM_TABS).setOrder(++generalOrder);
+        }
         findPreference(PREF_BACKGROUND_VIDEO_PLAYBACK).setOrder(++generalOrder);
 
         int displaySectionOrder = generalOrder;
@@ -209,7 +214,6 @@ public class BraveMainPreferencesBase
         findPreference(PREF_SUPPORT_SECTION).setOrder(++supportSectionOrder);
 
         findPreference(PREF_WELCOME_TOUR).setOrder(++supportSectionOrder);
-        findPreference(PREF_REPORT_BROKEN_SITE).setOrder(++supportSectionOrder);
         findPreference(PREF_RATE_BRAVE).setOrder(++supportSectionOrder);
 
         int aboutSectionOrder = supportSectionOrder;
@@ -226,11 +230,6 @@ public class BraveMainPreferencesBase
         findPreference(PREF_ABOUT_CHROME).setOrder(++aboutSectionOrder);
 
         int order = findPreference(PREF_CLOSING_ALL_TABS_CLOSES_BRAVE).getOrder();
-        if (DeviceFormFactor.isTablet()) {
-            removePreferenceIfPresent(PREF_USE_CUSTOM_TABS);
-        } else {
-            findPreference(PREF_USE_CUSTOM_TABS).setOrder(++order);
-        }
 
         // If gn flag enable_brave_sync is false, hide Sync pref
         if (BraveConfig.SYNC_ENABLED == false) {

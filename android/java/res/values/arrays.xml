@@ -3,21 +3,15 @@
 <resources>
 
     <string-array name="listArray">
-        <item>red</item>
-        <item>orange</item>
-        <item>yellow</item>
-        <item>green</item>
-        <item>blue</item>
-        <item>violet</item>
+        <item>@string/block_trackers_ads_option_1</item>
+        <item>@string/block_trackers_ads_option_2</item>
+        <item>@string/block_trackers_ads_option_3</item>
     </string-array>
 
     <string-array name="listValues">
         <item>1</item>
         <item>2</item>
         <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
     </string-array>
 
 </resources>

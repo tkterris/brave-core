@@ -10,6 +10,7 @@ import android.os.Bundle;
 
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
+import androidx.preference.ListPreference;
 
 import org.chromium.base.ContextUtils;
 import org.chromium.chrome.R;
@@ -27,6 +28,7 @@ import org.chromium.components.browser_ui.settings.ChromeSwitchPreference;
 import org.chromium.components.browser_ui.settings.SettingsUtils;
 import org.chromium.components.prefs.PrefService;
 import org.chromium.components.user_prefs.UserPrefs;
+import org.chromium.base.Log;
 
 public class BravePrivacySettings extends PrivacySettings {
 
@@ -43,13 +45,13 @@ public class BravePrivacySettings extends PrivacySettings {
 
     // brave Prefs
     private static final String PREF_BRAVE_SHIELDS_GLOBALS_SECTION = "brave_shields_globals_section";
-    private static final String PREF_CLEAR_DATA_AUTOMATICALLY_SECTION = "clear_data_automatically_section";
+    private static final String PREF_CLEAR_DATA_SECTION = "clear_data_section";
     private static final String PREF_BRAVE_SOCIAL_BLOCKING_SECTION = "brave_social_blocking_section";
     private static final String PREF_OTHER_PRIVACY_SETTINGS_SECTION = "other_privacy_settings_section";
 
     private static final String PREF_HTTPSE = "httpse";
     private static final String PREF_IPFS_GATEWAY = "ipfs_gateway";
-    // private static final String PREF_AD_BLOCK = "ad_block";
+    private static final String PREF_AD_BLOCK = "ad_block";
     private static final String PREF_BLOCK_SCRIPTS = "block_scripts";
     private static final String PREF_FINGERPRINTING_PROTECTION = "fingerprinting_protection";
     private static final String PREF_CLOSE_TABS_ON_EXIT = "close_tabs_on_exit";
@@ -69,66 +71,40 @@ public class BravePrivacySettings extends PrivacySettings {
     private static final String PREF_BLOCK_CROSS_SITE_COOKIES = "block_cross_site_cookies";
     private static final String PREF_BLOCK_FINGERPRINTING = "block_fingerprinting";
     private static final String PREF_SHIELDS_SUMMARY = "shields_summary";
-    private static final String PREF_CLEAR_DATA_FREQUENCY = "clear_data_frequency";
-    private static final String PREF_CLEAR_BROWSING_HISTORY = "clear_browsing_history";
-    private static final String PREF_CLEAR_CACHE = "clear_cache";
-    private static final String PREF_CLEAR_COOKIES = "clear_cookies";
-    private static final String PREF_CLEAR_SAVED_LOGINS = "clear_saved_logins";
-    private static final String PREF_CLEAR_DOWNLOADED_FILES = "clear_downloaded_files";
-    private static final String PREF_CLEAR_PRIVATE_DATA_BUTTON = "clear_private_data_button";
-
+    private static final String PREF_CLEAR_ON_EXIT = "clear_on_exit";
 
     private static final String[] NEW_PRIVACY_PREFERENCE_ORDER = {
             PREF_BRAVE_SHIELDS_GLOBALS_SECTION, //  shields globals  section
-            PREF_CLEAR_BROWSING_DATA,
-            PREF_BLOCK_TRACKERS_ADS,
-            PREF_HTTPSE,
-            PREF_BLOCK_SCRIPTS,
-            PREF_BLOCK_CROSS_SITE_COOKIES,
-            PREF_BLOCK_FINGERPRINTING,
-            PREF_SHIELDS_SUMMARY,
-            PREF_CLEAR_DATA_AUTOMATICALLY_SECTION, //  clear data automatically  section 
-            PREF_CLEAR_DATA_FREQUENCY,
-            PREF_CLEAR_BROWSING_HISTORY,
-            PREF_CLEAR_CACHE,
-            PREF_CLEAR_COOKIES,
-            PREF_CLEAR_SAVED_LOGINS,
-            PREF_CLEAR_DOWNLOADED_FILES,
-            PREF_CLEAR_PRIVATE_DATA_BUTTON,
+            PREF_BLOCK_TRACKERS_ADS, PREF_HTTPSE, PREF_BLOCK_SCRIPTS, PREF_BLOCK_CROSS_SITE_COOKIES,
+            PREF_BLOCK_FINGERPRINTING, PREF_SHIELDS_SUMMARY,
+            PREF_CLEAR_DATA_SECTION, //  clear data automatically  section
+            PREF_CLEAR_ON_EXIT, PREF_CLEAR_BROWSING_DATA,
             PREF_BRAVE_SOCIAL_BLOCKING_SECTION, // social blocking section
-            PREF_SOCIAL_BLOCKING_GOOGLE,
-            PREF_SOCIAL_BLOCKING_FACEBOOK,
-            PREF_SOCIAL_BLOCKING_TWITTER,
-            PREF_SOCIAL_BLOCKING_LINKEDIN,
+            PREF_SOCIAL_BLOCKING_GOOGLE, PREF_SOCIAL_BLOCKING_FACEBOOK,
+            PREF_SOCIAL_BLOCKING_TWITTER, PREF_SOCIAL_BLOCKING_LINKEDIN,
             PREF_OTHER_PRIVACY_SETTINGS_SECTION, // other section
-            PREF_WEBRTC_POLICY,
-            PREF_CLOSE_TABS_ON_EXIT,
-            PREF_SEARCH_SUGGESTIONS,
-            PREF_SEND_P3A,
-            PREF_NETWORK_PREDICTIONS, 
-            PREF_SAFE_BROWSING, 
-            PREF_CAN_MAKE_PAYMENT, 
-            PREF_USAGE_STATS,
-            PREF_SECURE_DNS, 
-            PREF_DO_NOT_TRACK, 
-            PREF_PRIVACY_SANDBOX, 
-            PREF_IPFS_GATEWAY,
-            PREF_UNSTOPPABLE_DOMAINS,
-            PREF_SYNC_AND_SERVICES_LINK
-        };
+            PREF_WEBRTC_POLICY, PREF_SAFE_BROWSING, PREF_NETWORK_PREDICTIONS, PREF_SECURE_DNS,
+            PREF_DO_NOT_TRACK, PREF_CLOSE_TABS_ON_EXIT, PREF_SEND_P3A, PREF_SEARCH_SUGGESTIONS,
+            PREF_AUTOCOMPLETE_TOP_SITES, PREF_AUTOCOMPLETE_BRAVE_SUGGESTED_SITES,
+            PREF_CAN_MAKE_PAYMENT, PREF_USAGE_STATS, PREF_PRIVACY_SANDBOX,
+            // PREF_IPFS_GATEWAY,
+            // PREF_UNSTOPPABLE_DOMAINS,
+            // PREF_SYNC_AND_SERVICES_LINK
+    };
 
     private final PrefService mPrefServiceBridge = UserPrefs.get(Profile.getLastUsedRegularProfile());
     private final ChromeManagedPreferenceDelegate mManagedPreferenceDelegate =
             createManagedPreferenceDelegate();
     private ChromeSwitchPreference mSearchSuggestions;
+    private ListPreference mAdsTrakersBlockPref;
     private ChromeSwitchPreference mAutocompleteTopSites;
     private ChromeSwitchPreference mAutocompleteBraveSuggestedSites;
-    private ChromeBaseCheckBoxPreference mHttpsePref;
+    private ChromeSwitchPreference mHttpsePref;
     private ChromeBaseCheckBoxPreference mIpfsGatewayPref;
     private ChromeBaseCheckBoxPreference mAdBlockPref;
-    private ChromeBaseCheckBoxPreference mFingerprintingProtectionPref;
-    private ChromeBaseCheckBoxPreference mCloseTabsOnExitPref;
-    private ChromeBaseCheckBoxPreference mSendP3A;
+    private ChromeBasePreference mFingerprintingProtectionPref;
+    private ChromeSwitchPreference mCloseTabsOnExitPref;
+    private ChromeSwitchPreference mSendP3A;
     private PreferenceCategory mSocialBlockingCategory;
     private ChromeSwitchPreference mSocialBlockingGoogle;
     private ChromeSwitchPreference mHttpsEverywhere;
@@ -140,8 +116,7 @@ public class BravePrivacySettings extends PrivacySettings {
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         super.onCreatePreferences(savedInstanceState, rootKey);
-        // removePreferenceIfPresent(PREF_AD_BLOCK);
-        
+
         for (int i = 0; i < NEW_PRIVACY_PREFERENCE_ORDER.length; i++) {
             if (findPreference(NEW_PRIVACY_PREFERENCE_ORDER[i]) != null) {
                 findPreference(NEW_PRIVACY_PREFERENCE_ORDER[i]).setOrder(i);
@@ -153,25 +128,26 @@ public class BravePrivacySettings extends PrivacySettings {
 
         SettingsUtils.addPreferencesFromResource(this, R.xml.brave_privacy_preferences);
 
-        mHttpsePref = (ChromeBaseCheckBoxPreference) findPreference(PREF_HTTPSE);
+        mHttpsePref = (ChromeSwitchPreference) findPreference(PREF_HTTPSE);
         mHttpsePref.setOnPreferenceChangeListener(this);
 
-        mIpfsGatewayPref = (ChromeBaseCheckBoxPreference) findPreference(PREF_IPFS_GATEWAY);
-        mIpfsGatewayPref.setOnPreferenceChangeListener(this);
+        // mIpfsGatewayPref = (ChromeBaseCheckBoxPreference) findPreference(PREF_IPFS_GATEWAY);
+        // mIpfsGatewayPref.setOnPreferenceChangeListener(this);
 
         // mAdBlockPref = (ChromeBaseCheckBoxPreference) findPreference(PREF_AD_BLOCK);
         // mAdBlockPref.setOnPreferenceChangeListener(this);
 
+        mAdsTrakersBlockPref = (ListPreference) findPreference(PREF_BLOCK_TRACKERS_ADS);
+        mAdsTrakersBlockPref.setOnPreferenceChangeListener(this);
+
         mFingerprintingProtectionPref =
-                (ChromeBaseCheckBoxPreference) findPreference(PREF_FINGERPRINTING_PROTECTION);
+                (ChromeBasePreference) findPreference(PREF_FINGERPRINTING_PROTECTION);
         mFingerprintingProtectionPref.setOnPreferenceChangeListener(this);
 
-        mCloseTabsOnExitPref =
-                (ChromeBaseCheckBoxPreference) findPreference(PREF_CLOSE_TABS_ON_EXIT);
+        mCloseTabsOnExitPref = (ChromeSwitchPreference) findPreference(PREF_CLOSE_TABS_ON_EXIT);
         mCloseTabsOnExitPref.setOnPreferenceChangeListener(this);
 
-        mSendP3A =
-                (ChromeBaseCheckBoxPreference) findPreference(PREF_SEND_P3A);
+        mSendP3A = (ChromeSwitchPreference) findPreference(PREF_SEND_P3A);
         mSendP3A.setOnPreferenceChangeListener(this);
 
         mSearchSuggestions = (ChromeSwitchPreference) findPreference(PREF_SEARCH_SUGGESTIONS);
@@ -201,7 +177,12 @@ public class BravePrivacySettings extends PrivacySettings {
 
         mWebrtcPolicy = (ChromeBasePreference) findPreference(PREF_WEBRTC_POLICY);
 
-        // updatePreferences();
+        updatePreferences();
+
+        removePreferenceIfPresent(PREF_AD_BLOCK);
+        removePreferenceIfPresent(PREF_IPFS_GATEWAY);
+        removePreferenceIfPresent(PREF_SYNC_AND_SERVICES_LINK);
+        removePreferenceIfPresent(PREF_UNSTOPPABLE_DOMAINS);
     }
 
     @Override
@@ -209,6 +190,7 @@ public class BravePrivacySettings extends PrivacySettings {
         super.onPreferenceChange(preference, newValue);
 
         String key = preference.getKey();
+
         if (PREF_HTTPSE.equals(key)) {
             BravePrefServiceBridge.getInstance().setHTTPSEEnabled((boolean) newValue);
         } else if (PREF_IPFS_GATEWAY.equals(key)) {
@@ -244,6 +226,17 @@ public class BravePrivacySettings extends PrivacySettings {
         } else if (PREF_SOCIAL_BLOCKING_LINKEDIN.equals(key)) {
             BravePrefServiceBridge.getInstance().setThirdPartyLinkedinEmbedEnabled(
                     (boolean) newValue);
+        } else if (PREF_BLOCK_TRACKERS_ADS.equals(key)) {
+            ListPreference listPreference = (ListPreference) preference;
+            int itemIndex = listPreference.findIndexOfValue(newValue.toString());
+
+            BravePrefServiceBridge.getInstance().setCosmeticFilteringControlType(itemIndex);
+            if (itemIndex == 0 || itemIndex == 1) {
+                mAdsTrakersBlockPref.setTitle(listPreference.getEntries()[itemIndex]); 
+            } else {
+                String allowTitle = String.format("%s (%s)", getActivity().getResources().getString(R.string.block_trackers_ads_title), getActivity().getResources().getString(R.string.block_trackers_ads_allow_all));
+                mAdsTrakersBlockPref.setTitle(allowTitle);
+            }
         }
 
         return true;
@@ -252,35 +245,35 @@ public class BravePrivacySettings extends PrivacySettings {
     @Override
     public void onResume() {
         super.onResume();
-        // updatePreferences();
+        updatePreferences();
     }
 
     private void updatePreferences() {
         removePreferenceIfPresent(PREF_SYNC_AND_SERVICES_LINK);
         mSearchSuggestions.setChecked(mPrefServiceBridge.getBoolean(Pref.SEARCH_SUGGEST_ENABLED));
-        int order = findPreference(PREF_DO_NOT_TRACK).getOrder();
-        mCloseTabsOnExitPref.setOrder(++order);
+        // int order = findPreference(PREF_DO_NOT_TRACK).getOrder();
+        // mCloseTabsOnExitPref.setOrder(++order);
         if (BraveConfig.P3A_ENABLED) {
-            mSendP3A.setOrder(++order);
+            // mSendP3A.setOrder(++order);
             mSendP3A.setChecked(BravePrefServiceBridge.getInstance().getP3AEnabled());
         } else {
             getPreferenceScreen().removePreference(mSendP3A);
         }
-        mHttpsePref.setOrder(++order);
-        mIpfsGatewayPref.setOrder(++order);
-        mAdBlockPref.setOrder(++order);
-        mFingerprintingProtectionPref.setOrder(++order);
-        mSearchSuggestions.setOrder(++order);
-        mWebrtcPolicy.setOrder(++order);
+        // mHttpsePref.setOrder(++order);
+        // mIpfsGatewayPref.setOrder(++order);
+        // mAdBlockPref.setOrder(++order);
+        // mFingerprintingProtectionPref.setOrder(++order);
+        // mSearchSuggestions.setOrder(++order);
+        // mWebrtcPolicy.setOrder(++order);
         mWebrtcPolicy.setSummary(
                 webrtcPolicyToString(BravePrefServiceBridge.getInstance().getWebrtcPolicy()));
         mAutocompleteTopSites
                 .setChecked(UserPrefs.get(Profile.getLastUsedRegularProfile()).getBoolean(BravePref.TOP_SITE_SUGGESTIONS_ENABLED));
-        mAutocompleteTopSites.setOrder(++order);
+        // mAutocompleteTopSites.setOrder(++order);
         mAutocompleteBraveSuggestedSites.setChecked(
                 UserPrefs.get(Profile.getLastUsedRegularProfile()).getBoolean(BravePref.BRAVE_SUGGESTED_SITE_SUGGESTIONS_ENABLED));
-        mAutocompleteBraveSuggestedSites.setOrder(++order);
-        mSocialBlockingCategory.setOrder(++order);
+        // mAutocompleteBraveSuggestedSites.setOrder(++order);
+        // mSocialBlockingCategory.setOrder(++order);
     }
 
     private void removePreferenceIfPresent(String key) {
