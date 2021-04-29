@@ -51,7 +51,6 @@ class BraveContentSettingsAgentImpl : public ContentSettingsAgentImpl {
   bool AllowAutoplay(bool play_requested) override;
 
   bool AllowFingerprinting(bool enabled_per_settings) override;
-  void DidBlockFingerprinting(const base::string16& details);
 
   BraveFarblingLevel GetBraveFarblingLevel() override;
 
