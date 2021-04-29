@@ -51,8 +51,8 @@ void AdBlockRegionalServiceManager::StartRegionalServices() {
       local_state->GetBoolean(kAdBlockCheckedDefaultRegion);
   if (!checked_default_region) {
     local_state->SetBoolean(kAdBlockCheckedDefaultRegion, true);
-    auto it = brave_shields::FindAdBlockFilterListByLocale(
-        regional_catalog_, delegate_->locale());
+    auto it = brave_shields::FindAdBlockFilterListByLocale(regional_catalog_,
+                                                           delegate_->locale());
     if (it == regional_catalog_.end())
       return;
     EnableFilterList(it->uuid, true);

@@ -35,9 +35,7 @@ source_set("browser_process") {
     "//chrome/browser/*",
   ]
 
-  sources = [
-    "brave_browser_process.h"
-  ]
+  sources = [ "brave_browser_process.h" ]
 
   deps = [
     "//brave/components/brave_ads/browser/buildflags",

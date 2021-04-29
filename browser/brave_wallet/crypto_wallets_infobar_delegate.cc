@@ -28,7 +28,8 @@
 #include "ui/views/vector_icons.h"
 
 // static
-void CryptoWalletsInfoBarDelegate::Create(InfoBarService* infobar_service,
+void CryptoWalletsInfoBarDelegate::Create(
+    InfoBarService* infobar_service,
     CryptoWalletsInfoBarDelegate::InfobarSubType subtype) {
   infobar_service->AddInfoBar(infobar_service->CreateConfirmInfoBar(
       std::unique_ptr<ConfirmInfoBarDelegate>(
@@ -36,9 +37,8 @@ void CryptoWalletsInfoBarDelegate::Create(InfoBarService* infobar_service,
 }
 
 CryptoWalletsInfoBarDelegate::CryptoWalletsInfoBarDelegate(
-    CryptoWalletsInfoBarDelegate::InfobarSubType subtype) :
-        subtype_(subtype) {
-}
+    CryptoWalletsInfoBarDelegate::InfobarSubType subtype)
+    : subtype_(subtype) {}
 
 CryptoWalletsInfoBarDelegate::~CryptoWalletsInfoBarDelegate() {}
 
@@ -51,8 +51,7 @@ const gfx::VectorIcon& CryptoWalletsInfoBarDelegate::GetVectorIcon() const {
   return views::kInfoIcon;
 }
 
-void CryptoWalletsInfoBarDelegate::InfoBarDismissed() {
-}
+void CryptoWalletsInfoBarDelegate::InfoBarDismissed() {}
 
 base::string16 CryptoWalletsInfoBarDelegate::GetMessageText() const {
   if (subtype_ == InfobarSubType::LOAD_CRYPTO_WALLETS) {
@@ -71,8 +70,7 @@ base::string16 CryptoWalletsInfoBarDelegate::GetButtonLabel(
     if (button == BUTTON_CANCEL) {
       return l10n_util::GetStringUTF16(IDS_BRAVE_CRYPTO_WALLETS_SETTINGS);
     }
-    return l10n_util::GetStringUTF16(
-        IDS_BRAVE_CRYPTO_WALLETS_START_AND_RELOAD);
+    return l10n_util::GetStringUTF16(IDS_BRAVE_CRYPTO_WALLETS_START_AND_RELOAD);
   }
 
   if (button == BUTTON_CANCEL) {
@@ -94,7 +92,7 @@ GURL CryptoWalletsInfoBarDelegate::GetLinkURL() const {
 bool CryptoWalletsInfoBarDelegate::Accept() {
   if (subtype_ == InfobarSubType::LOAD_CRYPTO_WALLETS) {
     content::WebContents* web_contents =
-      InfoBarService::WebContentsFromInfoBar(infobar());
+        InfoBarService::WebContentsFromInfoBar(infobar());
     if (web_contents) {
       auto* browser_context = web_contents->GetBrowserContext();
       auto* service = BraveWalletServiceFactory::GetForContext(browser_context);
@@ -106,11 +104,12 @@ bool CryptoWalletsInfoBarDelegate::Accept() {
   }
   if (infobar() && infobar()->owner()) {
     content::WebContents* web_contents =
-      InfoBarService::WebContentsFromInfoBar(infobar());
+        InfoBarService::WebContentsFromInfoBar(infobar());
     if (web_contents) {
       auto* browser_context = web_contents->GetBrowserContext();
-      user_prefs::UserPrefs::Get(browser_context)->
-          SetInteger(kBraveWalletWeb3Provider,
+      user_prefs::UserPrefs::Get(browser_context)
+          ->SetInteger(
+              kBraveWalletWeb3Provider,
               static_cast<int>(BraveWalletWeb3ProviderTypes::CRYPTO_WALLETS));
       Browser* browser = chrome::FindBrowserWithWebContents(web_contents);
       brave::ShowBraveWallet(browser);
@@ -121,13 +120,13 @@ bool CryptoWalletsInfoBarDelegate::Accept() {
 
 bool CryptoWalletsInfoBarDelegate::Cancel() {
   content::WebContents* web_contents =
-    InfoBarService::WebContentsFromInfoBar(infobar());
+      InfoBarService::WebContentsFromInfoBar(infobar());
   if (web_contents) {
     if (subtype_ == InfobarSubType::GENERIC_SETUP) {
       auto* browser_context = web_contents->GetBrowserContext();
-      user_prefs::UserPrefs::Get(browser_context)->
-          SetInteger(kBraveWalletWeb3Provider,
-              static_cast<int>(BraveWalletWeb3ProviderTypes::NONE));
+      user_prefs::UserPrefs::Get(browser_context)
+          ->SetInteger(kBraveWalletWeb3Provider,
+                       static_cast<int>(BraveWalletWeb3ProviderTypes::NONE));
       return true;
     }
     Browser* browser = chrome::FindBrowserWithWebContents(web_contents);

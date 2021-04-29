@@ -10,9 +10,7 @@ source_set("infobar") {
     "//chrome/browser/*",
   ]
 
-  sources = [
-    "crypto_wallets_infobar_delegate.h",
-  ]
+  sources = [ "crypto_wallets_infobar_delegate.h" ]
 
   deps = [
     "//base",
@@ -25,9 +23,9 @@ source_set("brave_wallet_impl") {
   visibility = [ "//chrome/browser" ]
 
   sources = [
+    "brave_wallet_context_utils.cc",
     "brave_wallet_delegate_impl.cc",
     "brave_wallet_delegate_impl.h",
-    "brave_wallet_context_utils.cc",
   ]
 
   deps = [

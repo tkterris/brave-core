@@ -5,9 +5,7 @@ import("//extensions/buildflags/buildflags.gni")
 source_set("tor_impl") {
   visibility = [ "//chrome/browser" ]
 
-  sources = [
-    "tor_profile_service_factory.cc",
-  ]
+  sources = [ "tor_profile_service_factory.cc" ]
 
   deps = [
     "//base",

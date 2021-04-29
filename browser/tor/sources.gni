@@ -4,8 +4,8 @@
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
-import("//brave/components/tor/buildflags/buildflags.gni")
 import("//brave/browser/translate/buildflags/buildflags.gni")
+import("//brave/components/tor/buildflags/buildflags.gni")
 
 brave_browser_tor_sources = []
 
