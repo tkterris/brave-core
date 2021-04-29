@@ -477,9 +477,8 @@ source_set("ui") {
       "webui/wallet_panel/wallet_panel_ui.h",
     ]
     deps += [
-      "//brave/components/brave_wallet_ui:mojo_bindings",
-      "//brave/components/brave_wallet_ui:page_generated_resources",
-      "//brave/components/brave_wallet_ui:panel_generated_resources",
+      "//brave/components/brave_wallet_ui/panel",
+      "//brave/components/brave_wallet_ui/page",
     ]
   }
 

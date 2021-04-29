@@ -12,45 +12,16 @@ preprocess_folder = "preprocessed"
 preprocess_manifest = "preprocessed_manifest.json"
 preprocess_mojo_manifest = "preprocessed_mojo_manifest.json"
 
-mojom("mojo_bindings") {
-  sources = [ "wallet_panel.mojom" ]
-  public_deps = [ "//mojo/public/mojom/base" ]
-}
-
-transpile_web_ui("brave_wallet_ui") {
-  entry_points = [ [
-        "brave_wallet",
-        rebase_path("brave_wallet.tsx"),
-      ] ]
-  resource_name = "brave_wallet"
-}
-
-pack_web_resources("page_generated_resources") {
-  resource_name = "brave_wallet"
-  output_dir = "$root_gen_dir/brave/components/brave_wallet/resources"
-  deps = [ ":brave_wallet_ui" ]
-}
-
-transpile_web_ui("brave_wallet_panel_ui") {
-  entry_points = [ [
-        "brave_wallet_panel",
-        rebase_path("brave_wallet_panel.tsx"),
-      ] ]
-  resource_name = "brave_wallet_panel"
-  output_dir = "$root_gen_dir/brave/components/brave_wallet/resources"
+group("panel") {
   deps = [
-    ":mojo_bindings_js",
-    ":preprocess",
-    ":preprocess_mojo",
-    ":wallet_panel_api_proxy",
+    ":mojo_bindings",
+    ":panel_generated_resources",
   ]
 }
 
-pack_web_resources("panel_generated_resources") {
-  resource_name = "brave_wallet_panel"
-  generated_dir = "$root_gen_dir/brave/components/brave_wallet/resources"
-  output_dir = "$root_gen_dir/brave/components/brave_wallet/resources"
-  deps = [ ":brave_wallet_panel_ui" ]
+mojom("mojo_bindings") {
+  sources = [ "wallet_panel.mojom" ]
+  public_deps = [ "//mojo/public/mojom/base" ]
 }
 
 preprocess_if_expr("preprocess") {
@@ -72,5 +43,27 @@ js_library("wallet_panel_api_proxy") {
   deps = [
     ":mojo_bindings_js_library_for_compile",
     "//ui/webui/resources/js:cr.m",
+  ]
+}
+
+pack_web_resources("panel_generated_resources") {
+  resource_name = "brave_wallet_panel"
+  generated_dir = "$root_gen_dir/brave/components/brave_wallet/resources"
+  output_dir = "$root_gen_dir/brave/components/brave_wallet/resources"
+  deps = [ ":brave_wallet_panel_ui" ]
+}
+
+transpile_web_ui("brave_wallet_panel_ui") {
+  entry_points = [ [
+        "brave_wallet_panel",
+        rebase_path("wallet_panel.tsx"),
+      ] ]
+  resource_name = "brave_wallet_panel"
+  output_dir = "$root_gen_dir/brave/components/brave_wallet/resources"
+  deps = [
+    ":mojo_bindings_js",
+    ":preprocess",
+    ":preprocess_mojo",
+    ":wallet_panel_api_proxy",
   ]
 }
