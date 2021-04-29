@@ -46,15 +46,15 @@ class LedgerImpl;
 namespace endpoint {
 namespace gemini {
 
-using GetBalanceCallback =
+using PostBalanceCallback =
     std::function<void(const type::Result result, const double available)>;
 
-class GetBalance {
+class PostBalance {
  public:
-  explicit GetBalance(LedgerImpl* ledger);
-  ~GetBalance();
+  explicit PostBalance(LedgerImpl* ledger);
+  ~PostBalance();
 
-  void Request(const std::string& token, GetBalanceCallback callback);
+  void Request(const std::string& token, PostBalanceCallback callback);
 
  private:
   std::string GetUrl();
@@ -64,7 +64,7 @@ class GetBalance {
   type::Result ParseBody(const std::string& body, double* available);
 
   void OnRequest(const type::UrlResponse& response,
-                 GetBalanceCallback callback);
+                 PostBalanceCallback callback);
 
   LedgerImpl* ledger_;  // NOT OWNED
 };

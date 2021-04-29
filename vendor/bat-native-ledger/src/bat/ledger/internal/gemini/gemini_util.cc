@@ -213,9 +213,7 @@ bool SetWallet(LedgerImpl* ledger, type::ExternalWalletPtr wallet) {
 }
 
 std::string GetAccountUrl() {
-  const std::string url = GetUrl();
-
-  return base::StringPrintf("%s/ex/Home?login=1", url.c_str());
+  return GetUrl();
 }
 
 type::ExternalWalletPtr GenerateLinks(type::ExternalWalletPtr wallet) {

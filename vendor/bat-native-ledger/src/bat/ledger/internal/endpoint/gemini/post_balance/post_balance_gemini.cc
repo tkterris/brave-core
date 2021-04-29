@@ -3,7 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "bat/ledger/internal/endpoint/gemini/get_balance/get_balance_gemini.h"
+#include "bat/ledger/internal/endpoint/gemini/post_balance/post_balance_gemini.h"
 
 #include <utility>
 
@@ -20,17 +20,17 @@ namespace ledger {
 namespace endpoint {
 namespace gemini {
 
-GetBalance::GetBalance(LedgerImpl* ledger) : ledger_(ledger) {
+PostBalance::PostBalance(LedgerImpl* ledger) : ledger_(ledger) {
   DCHECK(ledger_);
 }
 
-GetBalance::~GetBalance() = default;
+PostBalance::~PostBalance() = default;
 
-std::string GetBalance::GetUrl() {
-  return GetApiServerUrl("/api/link/v1/account/inventory");
+std::string PostBalance::GetUrl() {
+  return GetApiServerUrl("/v1/balances");
 }
 
-type::Result GetBalance::CheckStatusCode(const int status_code) {
+type::Result PostBalance::CheckStatusCode(const int status_code) {
   if (status_code == net::HTTP_UNAUTHORIZED ||
       status_code == net::HTTP_NOT_FOUND ||
       status_code == net::HTTP_FORBIDDEN) {
@@ -44,40 +44,39 @@ type::Result GetBalance::CheckStatusCode(const int status_code) {
   return type::Result::LEDGER_OK;
 }
 
-type::Result GetBalance::ParseBody(const std::string& body, double* available) {
+type::Result PostBalance::ParseBody(const std::string& body, double* available) {
   DCHECK(available);
 
   base::Optional<base::Value> value = base::JSONReader::Read(body);
-  if (!value || !value->is_dict()) {
+  if (!value || !value->is_list()) {
     BLOG(0, "Invalid JSON");
     return type::Result::LEDGER_ERROR;
   }
 
-  base::DictionaryValue* dictionary = nullptr;
-  if (!value->GetAsDictionary(&dictionary)) {
+  base::ListValue* balances = nullptr;
+  if (!value->GetAsList(&balances)) {
     BLOG(0, "Invalid JSON");
     return type::Result::LEDGER_ERROR;
   }
 
-  const auto* inventory = dictionary->FindListKey("inventory");
-  if (!inventory) {
-    BLOG(0, "Missing inventory");
-    return type::Result::LEDGER_ERROR;
-  }
-
-  for (const auto& item : inventory->GetList()) {
-    const auto* currency_code = item.FindStringKey("currency_code");
+  for (auto&& balance: balances->GetList()) {
+    const auto* currency_code = balance.FindStringKey("currency");
     if (!currency_code || *currency_code != "BAT") {
       continue;
     }
 
-    const auto available_value = item.FindDoubleKey("available");
+    const auto* available_value = balance.FindStringKey("available");
     if (!available_value) {
       BLOG(0, "Missing available");
       return type::Result::LEDGER_ERROR;
     }
-
-    *available = available_value.value();
+    
+    const bool result = base::StringToDouble(base::StringPiece(*available_value),
+                                             available);
+    if (!result) {
+      BLOG(0, "Invalid balance");
+      return type::Result::LEDGER_ERROR;
+    }
 
     return type::Result::LEDGER_OK;
   }
@@ -86,17 +85,18 @@ type::Result GetBalance::ParseBody(const std::string& body, double* available) {
   return type::Result::LEDGER_ERROR;
 }
 
-void GetBalance::Request(const std::string& token,
-                         GetBalanceCallback callback) {
-  auto url_callback = std::bind(&GetBalance::OnRequest, this, _1, callback);
+void PostBalance::Request(const std::string& token,
+                         PostBalanceCallback callback) {
+  auto url_callback = std::bind(&PostBalance::OnRequest, this, _1, callback);
   auto request = type::UrlRequest::New();
   request->url = GetUrl();
+  request->method = type::UrlMethod::POST;
   request->headers = RequestAuthorization(token);
   ledger_->LoadURL(std::move(request), url_callback);
 }
 
-void GetBalance::OnRequest(const type::UrlResponse& response,
-                           GetBalanceCallback callback) {
+void PostBalance::OnRequest(const type::UrlResponse& response,
+                           PostBalanceCallback callback) {
   ledger::LogUrlResponse(__func__, response);
 
   type::Result result = CheckStatusCode(response.status_code);

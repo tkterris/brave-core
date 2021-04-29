@@ -113,7 +113,7 @@ void Gemini::FetchBalance(FetchBalanceCallback callback) {
   auto url_callback =
       std::bind(&Gemini::OnFetchBalance, this, _1, _2, callback);
 
-  gemini_server_->get_balance()->Request(wallet->token, url_callback);
+  gemini_server_->post_balance()->Request(wallet->token, url_callback);
 }
 
 void Gemini::OnFetchBalance(const type::Result result,

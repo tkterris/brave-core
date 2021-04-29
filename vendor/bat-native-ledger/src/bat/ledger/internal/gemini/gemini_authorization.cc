@@ -18,6 +18,7 @@
 using std::placeholders::_1;
 using std::placeholders::_2;
 using std::placeholders::_3;
+using std::placeholders::_4;
 
 namespace ledger {
 namespace gemini {
@@ -138,7 +139,7 @@ void GeminiAuthorization::OnAuthorize(
     callback(type::Result::LEDGER_ERROR, {});
     return;
   }
-  auto url_callback = std::bind(&GeminiAuthorization::OnPostAccount, this, _1, _2, _3,
+  auto url_callback = std::bind(&GeminiAuthorization::OnPostAccount, this, _1, _2, _3, _4,
                                 token, callback);
   gemini_server_->post_account()->Request(token, url_callback);
 }
@@ -147,6 +148,7 @@ void GeminiAuthorization::OnPostAccount(
     const type::Result result,
     const std::string& address,
     const std::string& linking_info,
+    const std::string& name,
     const std::string& token,
     ledger::ExternalWalletAuthorizationCallback callback) {
    if (result == type::Result::EXPIRED_TOKEN) {
@@ -167,6 +169,8 @@ void GeminiAuthorization::OnPostAccount(
   auto wallet_ptr = GetWallet(ledger_);
 
   wallet_ptr->token = token;
+  wallet_ptr->address = address;
+  wallet_ptr->user_name = name;
 
   switch (wallet_ptr->status) {
     case type::WalletStatus::NOT_CONNECTED:

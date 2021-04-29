@@ -46,9 +46,11 @@ type::Result PostAccount::CheckStatusCode(const int status_code) {
 
 type::Result PostAccount::ParseBody(const std::string& body,
                                    std::string* address,
-                                   std::string* linking_info) {
+                                   std::string* linking_info,
+                                   std::string* user_name) {
   DCHECK(address);
   DCHECK(linking_info);
+  DCHECK(user_name);
 
   base::Optional<base::Value> value = base::JSONReader::Read(body);
   if (!value || !value->is_dict()) {
@@ -80,8 +82,27 @@ type::Result PostAccount::ParseBody(const std::string& body,
     return type::Result::LEDGER_ERROR;
   }
 
+  const auto* users = dictionary->FindListKey("users");
+  if (!users) {
+    BLOG(0, "Missing users");
+    return type::Result::LEDGER_ERROR;
+  }
+
+  const base::Value::ConstListView user_list = users->GetList();
+  if (user_list.size() == 0) {
+    BLOG(0, "No users associated with this token");
+    return type::Result::LEDGER_ERROR;
+  }
+
+  const auto* name = user_list[0].FindStringKey("name");
+  if (!name) {
+    BLOG(0, "Missing user name");
+    return type::Result::LEDGER_ERROR;
+  }
+
   *address = *account_name;
   *linking_info = *linking_information;
+  *user_name = *name;
 
   return type::Result::LEDGER_OK;
 }
@@ -103,14 +124,16 @@ void PostAccount::OnRequest(const type::UrlResponse& response,
   type::Result result = CheckStatusCode(response.status_code);
 
   if (result != type::Result::LEDGER_OK) {
-    callback(result, "", "");
+    callback(result, "", "", "");
     return;
   }
 
   std::string linking_info;
   std::string address;
-  result = ParseBody(response.body, &address, &linking_info);
-  callback(result, address, linking_info);
+  std::string user_name;
+
+  result = ParseBody(response.body, &address, &linking_info, &user_name);
+  callback(result, address, linking_info, user_name);
 }
 
 }  // namespace gemini
