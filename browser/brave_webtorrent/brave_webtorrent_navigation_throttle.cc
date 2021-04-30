@@ -3,7 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "brave/browser/extensions/brave_webtorrent_navigation_throttle.h"
+#include "brave/browser/brave_webtorrent/brave_webtorrent_navigation_throttle.h"
 
 #include "base/bind.h"
 #include "brave/browser/extensions/brave_component_loader.h"
@@ -31,13 +31,12 @@
 namespace extensions {
 
 BraveWebTorrentNavigationThrottle::BraveWebTorrentNavigationThrottle(
-        content::NavigationHandle* navigation_handle) :
-    content::NavigationThrottle(navigation_handle),
-    extension_registry_observer_(this),
-    resume_pending_(false) {
-  extension_registry_observer_.Add(
-      ExtensionRegistry::Get(
-          navigation_handle->GetWebContents()->GetBrowserContext()));
+    content::NavigationHandle* navigation_handle)
+    : content::NavigationThrottle(navigation_handle),
+      extension_registry_observer_(this),
+      resume_pending_(false) {
+  extension_registry_observer_.Add(ExtensionRegistry::Get(
+      navigation_handle->GetWebContents()->GetBrowserContext()));
 }
 
 BraveWebTorrentNavigationThrottle::~BraveWebTorrentNavigationThrottle() {
@@ -61,8 +60,8 @@ BraveWebTorrentNavigationThrottle::WillProcessResponse() {
 
 // static
 bool BraveWebTorrentNavigationThrottle::MaybeLoadWebtorrent(
-  content::BrowserContext* context,
-  const GURL& url) {
+    content::BrowserContext* context,
+    const GURL& url) {
   // No need to load Webtorrent if pref is off or it is already enabled.
   if (!webtorrent::IsWebtorrentPrefEnabled(context) ||
       webtorrent::IsWebtorrentEnabled(context)) {
@@ -70,13 +69,13 @@ bool BraveWebTorrentNavigationThrottle::MaybeLoadWebtorrent(
   }
 
   extensions::ExtensionService* service =
-    extensions::ExtensionSystem::Get(context)->extension_service();
+      extensions::ExtensionSystem::Get(context)->extension_service();
   if (!service)
     return false;
 
   extensions::ComponentLoader* loader = service->component_loader();
-  static_cast<extensions::BraveComponentLoader*>(loader)->
-    AddWebTorrentExtension();
+  static_cast<extensions::BraveComponentLoader*>(loader)
+      ->AddWebTorrentExtension();
   return true;
 }
 
@@ -92,10 +91,10 @@ BraveWebTorrentNavigationThrottle::CommonWillProcessRequestResponse() {
   // So the best we can do is via URL pattern match and magnet links.
   // Headers are null when processing WillStartRequest.
   auto* headers = navigation_handle()->GetResponseHeaders();
-  bool is_torrent_file = headers ? webtorrent::IsTorrentFile(url, headers) :
-      webtorrent::TorrentURLMatched(url);
+  bool is_torrent_file = headers ? webtorrent::IsTorrentFile(url, headers)
+                                 : webtorrent::TorrentURLMatched(url);
   if ((url.SchemeIs(kMagnetScheme) || is_torrent_file) &&
-       MaybeLoadWebtorrent(web_contents->GetBrowserContext(), url)) {
+      MaybeLoadWebtorrent(web_contents->GetBrowserContext(), url)) {
     resume_pending_ = true;
     return content::NavigationThrottle::DEFER;
   }
@@ -110,8 +109,7 @@ const char* BraveWebTorrentNavigationThrottle::GetNameForLogging() {
 void BraveWebTorrentNavigationThrottle::OnExtensionReady(
     content::BrowserContext* browser_context,
     const Extension* extension) {
-  if (resume_pending_ &&
-      extension->id() == brave_webtorrent_extension_id) {
+  if (resume_pending_ && extension->id() == brave_webtorrent_extension_id) {
     ResumeThrottle();
   }
 }
