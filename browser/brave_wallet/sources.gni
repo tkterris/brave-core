@@ -17,27 +17,16 @@ if (brave_wallet_enabled) {
     "//brave/browser/brave_wallet/brave_wallet_context_utils.h",
     "//brave/browser/brave_wallet/brave_wallet_service_factory.cc",
     "//brave/browser/brave_wallet/brave_wallet_service_factory.h",
-    "//brave/browser/brave_wallet/crypto_wallets_infobar_delegate.cc",
   ]
 
   brave_browser_wallet_deps += [
     "//base",
-    "//brave/app:brave_generated_resources_grit",
     "//brave/browser/brave_wallet:brave_wallet_impl",
-    "//brave/browser/brave_wallet:infobar",
-    "//brave/browser/ui",
     "//brave/common",
     "//brave/components/brave_wallet/browser",
-    "//chrome/browser/ui",
-    "//components/infobars/core",
     "//components/keyed_service/content",
-    "//components/prefs",
-    "//components/strings",
     "//content/public/browser",
     "//extensions/buildflags",
-    "//extensions/common:common_constants",
-    "//ui/base",
-    "//ui/views",
   ]
 
   if (enable_extensions) {

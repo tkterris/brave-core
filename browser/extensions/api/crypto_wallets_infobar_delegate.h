@@ -3,8 +3,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef BRAVE_BROWSER_BRAVE_WALLET_CRYPTO_WALLETS_INFOBAR_DELEGATE_H_
-#define BRAVE_BROWSER_BRAVE_WALLET_CRYPTO_WALLETS_INFOBAR_DELEGATE_H_
+#ifndef BRAVE_BROWSER_EXTENSIONS_API_CRYPTO_WALLETS_INFOBAR_DELEGATE_H_
+#define BRAVE_BROWSER_EXTENSIONS_API_CRYPTO_WALLETS_INFOBAR_DELEGATE_H_
 
 #include "base/compiler_specific.h"
 #include "base/memory/weak_ptr.h"
@@ -50,4 +50,4 @@ class CryptoWalletsInfoBarDelegate : public ConfirmInfoBarDelegate {
   base::WeakPtrFactory<CryptoWalletsInfoBarDelegate> weak_ptr_factory_{this};
 };
 
-#endif  // BRAVE_BROWSER_BRAVE_WALLET_CRYPTO_WALLETS_INFOBAR_DELEGATE_H_
+#endif  // BRAVE_BROWSER_EXTENSIONS_API_CRYPTO_WALLETS_INFOBAR_DELEGATE_H_

@@ -1,0 +1,23 @@
+import("//brave/components/brave_webtorrent/browser/buildflags/buildflags.gni")
+
+assert(enable_brave_webtorrent)
+
+source_set("brave_webtorrent") {
+  sources = [
+    "brave_webtorrent_navigation_throttle.cc",
+    "brave_webtorrent_navigation_throttle.h",
+  ]
+
+  deps = [
+    "//brave/browser/extensions",
+    "//brave/browser/net",
+    "//brave/browser/profiles:util",
+    "//brave/common:pref_names",
+    "//brave/components/brave_webtorrent/browser",
+    "//chrome/browser/extensions",
+    "//chrome/browser/profiles:profile",
+    "//content/public/common",
+    "//extensions/browser",
+    "//extensions/common",
+  ]
+}

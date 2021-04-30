@@ -3,22 +3,6 @@ import("//extensions/buildflags/buildflags.gni")
 
 assert(brave_wallet_enabled)
 
-source_set("infobar") {
-  visibility = [
-    "//brave/browser/*",
-    "//brave/test:brave_browser_tests",
-    "//chrome/browser/*",
-  ]
-
-  sources = [ "crypto_wallets_infobar_delegate.h" ]
-
-  deps = [
-    "//base",
-    "//components/infobars/core",
-    "//url",
-  ]
-}
-
 source_set("brave_wallet_impl") {
   visibility = [ "//chrome/browser" ]
 

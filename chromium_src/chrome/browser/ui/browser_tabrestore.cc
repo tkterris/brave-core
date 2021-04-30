@@ -3,15 +3,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "brave/components/brave_webtorrent/browser/buildflags/buildflags.h"
 #include "chrome/browser/ui/browser_tabrestore.h"
 
+#include "brave/components/brave_webtorrent/browser/buildflags/buildflags.h"
+
 #if BUILDFLAG(ENABLE_BRAVE_WEBTORRENT)
-#include "brave/browser/extensions/brave_component_loader.h"
-#include "brave/browser/extensions/brave_webtorrent_navigation_throttle.h"
+#include "brave/browser/brave_webtorrent/brave_webtorrent_navigation_throttle.h"
 #include "brave/components/brave_webtorrent/browser/webtorrent_util.h"
-#include "chrome/browser/extensions/extension_service.h"
-#include "extensions/browser/extension_system.h"
 #endif
 
 #define AddRestoredTab AddRestoredTab_ChromiumImpl

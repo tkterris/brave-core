@@ -386,6 +386,7 @@ test("brave_unit_tests") {
     ]
 
     deps += [
+      "//brave/browser/brave_webtorrent",
       "//brave/common:pref_names",
       "//brave/components/brave_referrals/browser",
     ]
@@ -675,7 +676,6 @@ if (!is_android) {
       ]
 
       deps += [
-        "//brave/browser/brave_wallet:infobar",
         "//brave/components/brave_wallet/browser",
         "//brave/components/brave_wallet/common",
       ]

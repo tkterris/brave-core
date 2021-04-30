@@ -9,7 +9,6 @@
 #include "base/macros.h"
 #include "base/timer/timer.h"
 #include "content/public/browser/navigation_throttle.h"
-#include "extensions/browser/test_extension_registry_observer.h"
 
 namespace content {
 class NavigationHandle;

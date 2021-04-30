@@ -95,17 +95,29 @@ source_set("extensions") {
     sources += [
       "api/brave_wallet_api.cc",
       "api/brave_wallet_api.h",
+      "api/crypto_wallets_infobar_delegate.cc",
+      "api/crypto_wallets_infobar_delegate.h",
       "brave_wallet_util.cc",
       "brave_wallet_util.h",
     ]
+
     configs += [
       ":infura_config",
       ":brave_services_config",
     ]
+
     deps += [
-      "//brave/browser/brave_wallet:infobar",
+      # TODO(bridiver) fix circular dependency - brave/browser/ui should not
+      # depend on brave/browser/extensions
+      # "//brave/browser/ui",
+      # "//chrome/browser/ui",
       "//brave/components/brave_wallet/browser",
       "//brave/components/brave_wallet/common",
+      "//components/infobars/core",
+      "//components/strings",
+      "//extensions/common:common_constants",
+      "//ui/base",
+      "//ui/views",
     ]
   }
 
@@ -135,13 +147,6 @@ source_set("extensions") {
       "//brave/components/brave_rewards/browser",
       "//brave/vendor/bat-native-ads:headers",
       "//brave/vendor/bat-native-ledger:headers",
-    ]
-  }
-  if (enable_brave_webtorrent) {
-    deps += [ "//brave/components/brave_webtorrent/browser" ]
-    sources += [
-      "brave_webtorrent_navigation_throttle.cc",
-      "brave_webtorrent_navigation_throttle.h",
     ]
   }
   if (enable_brave_wayback_machine) {
