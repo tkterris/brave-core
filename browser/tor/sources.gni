@@ -17,15 +17,17 @@ if (enable_tor) {
     "//brave/browser/tor/onion_location_navigation_throttle_delegate.h",
     "//brave/browser/tor/tor_profile_manager.cc",
     "//brave/browser/tor/tor_profile_manager.h",
+    "//brave/browser/tor/tor_profile_service_factory.cc",
     "//brave/browser/tor/tor_profile_service_factory.h",
   ]
 
   brave_browser_tor_deps += [
     "//base",
-    "//brave/browser/tor:tor_impl",
+    "//brave/browser:browser_process",
     "//brave/browser/translate/buildflags",
     "//brave/common",
     "//brave/components/tor",
+    "//chrome/browser:browser_process",
     "//chrome/browser/ui",
     "//chrome/common",
     "//components/keyed_service/content",

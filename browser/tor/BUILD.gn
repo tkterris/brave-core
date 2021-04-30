@@ -2,23 +2,6 @@ import("//brave/components/brave_ads/browser/buildflags/buildflags.gni")
 import("//brave/components/tor/buildflags/buildflags.gni")
 import("//extensions/buildflags/buildflags.gni")
 
-source_set("tor_impl") {
-  visibility = [ "//chrome/browser" ]
-
-  sources = [ "tor_profile_service_factory.cc" ]
-
-  deps = [
-    "//base",
-    "//brave/browser:browser_process",
-    "//brave/components/tor",
-    "//chrome/browser:browser_process",
-    "//chrome/common",
-    "//components/keyed_service/content",
-    "//components/prefs",
-    "//content/public/browser",
-  ]
-}
-
 source_set("unit_tests") {
   testonly = true
   if (enable_tor) {
