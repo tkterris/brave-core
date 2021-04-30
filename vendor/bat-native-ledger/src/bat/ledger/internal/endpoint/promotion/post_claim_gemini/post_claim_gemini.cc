@@ -48,11 +48,10 @@ std::string PostClaimGemini::GetUrl() {
   return GetServerUrl(path);
 }
 
-std::string PostClaimGemini::GeneratePayload(
-    const std::string& address,
-    const std::string& linking_info) {
+std::string PostClaimGemini::GeneratePayload(const std::string& address,
+                                             const std::string& linking_info) {
   base::Value payload(base::Value::Type::DICTIONARY);
-  payload.SetStringKey("deposit_id",  address);
+  payload.SetStringKey("deposit_id", address);
   payload.SetStringKey("linking_info", linking_info);
   std::string json;
   base::JSONWriter::Write(payload, &json);
@@ -117,7 +116,7 @@ void PostClaimGemini::Request(const std::string& address,
 }
 
 void PostClaimGemini::OnRequest(const type::UrlResponse& response,
-                                  PostClaimGeminiCallback callback) {
+                                PostClaimGeminiCallback callback) {
   ledger::LogUrlResponse(__func__, response);
   callback(CheckStatusCode(response.status_code));
 }

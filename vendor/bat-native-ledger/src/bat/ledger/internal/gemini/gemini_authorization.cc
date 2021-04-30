@@ -9,8 +9,8 @@
 
 #include "base/strings/string_number_conversions.h"
 #include "bat/ledger/global_constants.h"
-#include "bat/ledger/internal/gemini/gemini_util.h"
 #include "bat/ledger/internal/common/random_util.h"
+#include "bat/ledger/internal/gemini/gemini_util.h"
 #include "bat/ledger/internal/ledger_impl.h"
 #include "bat/ledger/internal/logging/event_log_keys.h"
 #include "crypto/sha2.h"
@@ -112,9 +112,11 @@ void GeminiAuthorization::Authorize(
   const std::string external_account_id =
       base::HexEncode(hashed_payment_id.data(), hashed_payment_id.size());
 
-  auto url_callback = std::bind(&GeminiAuthorization::OnAuthorize, this, _1, _2, callback);
+  auto url_callback =
+      std::bind(&GeminiAuthorization::OnAuthorize, this, _1, _2, callback);
 
-  gemini_server_->post_oauth()->Request(external_account_id, code, url_callback);
+  gemini_server_->post_oauth()->Request(external_account_id, code,
+                                        url_callback);
 }
 
 void GeminiAuthorization::OnAuthorize(
@@ -139,8 +141,8 @@ void GeminiAuthorization::OnAuthorize(
     callback(type::Result::LEDGER_ERROR, {});
     return;
   }
-  auto url_callback = std::bind(&GeminiAuthorization::OnPostAccount, this, _1, _2, _3, _4,
-                                token, callback);
+  auto url_callback = std::bind(&GeminiAuthorization::OnPostAccount, this, _1,
+                                _2, _3, _4, token, callback);
   gemini_server_->post_account()->Request(token, url_callback);
 }
 
@@ -151,7 +153,7 @@ void GeminiAuthorization::OnPostAccount(
     const std::string& name,
     const std::string& token,
     ledger::ExternalWalletAuthorizationCallback callback) {
-   if (result == type::Result::EXPIRED_TOKEN) {
+  if (result == type::Result::EXPIRED_TOKEN) {
     BLOG(0, "Expired token");
     callback(type::Result::EXPIRED_TOKEN, {});
     ledger_->gemini()->DisconnectWallet();
@@ -184,8 +186,9 @@ void GeminiAuthorization::OnPostAccount(
 
   ledger_->gemini()->SetWallet(wallet_ptr->Clone());
 
-  /*auto url_callback = std::bind(&GeminiAuthorization::OnClaimWallet, this, _1, token, callback);
-  promotion_server_->post_claim_gemini()->Request(address, linking_info, url_callback);*/
+  /*auto url_callback = std::bind(&GeminiAuthorization::OnClaimWallet, this, _1,
+  token, callback); promotion_server_->post_claim_gemini()->Request(address,
+  linking_info, url_callback);*/
 }
 
 void GeminiAuthorization::OnClaimWallet(

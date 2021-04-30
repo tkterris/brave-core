@@ -8,14 +8,14 @@
 #include <vector>
 
 #include "base/test/task_environment.h"
-#include "bat/ledger/internal/endpoint/gemini/get_balance/get_balance_gemini.h"
+#include "bat/ledger/internal/endpoint/gemini/post_account/post_account_gemini.h"
 #include "bat/ledger/internal/ledger_client_mock.h"
 #include "bat/ledger/internal/ledger_impl_mock.h"
 #include "bat/ledger/ledger.h"
 #include "net/http/http_status_code.h"
 #include "testing/gtest/include/gtest/gtest.h"
 
-// npm run test -- brave_unit_tests --filter=GetBalanceTest.*
+// npm run test -- brave_unit_tests --filter=PostAccountGeminiTest.*
 
 using ::testing::_;
 using ::testing::Invoke;
@@ -24,24 +24,24 @@ namespace ledger {
 namespace endpoint {
 namespace gemini {
 
-class GetBalanceTest : public testing::Test {
+class PostAccountGeminiTest : public testing::Test {
  private:
   base::test::TaskEnvironment scoped_task_environment_;
 
  protected:
   std::unique_ptr<ledger::MockLedgerClient> mock_ledger_client_;
   std::unique_ptr<ledger::MockLedgerImpl> mock_ledger_impl_;
-  std::unique_ptr<GetBalance> balance_;
+  std::unique_ptr<PostAccount> post_account_;
 
-  GetBalanceTest() {
+  PostAccountGeminiTest() {
     mock_ledger_client_ = std::make_unique<ledger::MockLedgerClient>();
     mock_ledger_impl_ =
         std::make_unique<ledger::MockLedgerImpl>(mock_ledger_client_.get());
-    balance_ = std::make_unique<GetBalance>(mock_ledger_impl_.get());
+    post_account_ = std::make_unique<PostAccount>(mock_ledger_impl_.get());
   }
 };
 
-TEST_F(GetBalanceTest, ServerOK) {
+TEST_F(PostAccountGeminiTest, ServerOK) {
   ON_CALL(*mock_ledger_client_, LoadURL(_, _))
       .WillByDefault(Invoke(
           [](type::UrlRequestPtr request, client::LoadURLCallback callback) {
@@ -49,86 +49,36 @@ TEST_F(GetBalanceTest, ServerOK) {
             response.status_code = 200;
             response.url = request->url;
             response.body = R"({
-              "account_hash": "ad0fd9160be16790893ff021b2f9ccf7f14b5a9f",
-              "inventory": [
-                {
-                  "currency_code": "JPY",
-                  "amount": 0.0,
-                  "available": 0.0
-                },
-                {
-                  "currency_code": "BTC",
-                  "amount": 0.0,
-                  "available": 0.0
-                },
-                {
-                  "currency_code": "BCH",
-                  "amount": 0.0,
-                  "available": 0.0
-                },
-                {
-                  "currency_code": "ETH",
-                  "amount": 0.0,
-                  "available": 0.0
-                },
-                {
-                  "currency_code": "ETC",
-                  "amount": 0.0,
-                  "available": 0.0
-                },
-                {
-                  "currency_code": "LTC",
-                  "amount": 0.0,
-                  "available": 0.0
-                },
-                {
-                  "currency_code": "MONA",
-                  "amount": 0.0,
-                  "available": 0.0
-                },
-                {
-                  "currency_code": "LSK",
-                  "amount": 0.0,
-                  "available": 0.0
-                },
-                {
-                  "currency_code": "XRP",
-                  "amount": 0.0,
-                  "available": 0.0
-                },
-                {
-                  "currency_code": "BAT",
-                  "amount": 4.0,
-                  "available": 4.0
-                },
-                {
-                  "currency_code": "XLM",
-                  "amount": 0.0,
-                  "available": 0.0
-                },
-                {
-                  "currency_code": "XEM",
-                  "amount": 0.0,
-                  "available": 0.0
-                },
-                {
-                  "currency_code": "XTZ",
-                  "amount": 0.0,
-                  "available": 0.0
-                }
-              ]
-            })";
+              "account": {
+              "accountName": "Primary",
+              "shortName": "primary",
+              "type": "exchange",
+              "created": "1619040615242",
+              "verificationToken": "mocktoken"
+            },
+            "users": [{
+              "name": "Test",
+              "lastSignIn": "2021-04-30T18:46:03.017Z",
+              "status": "Active",
+              "countryCode": "US",
+              "isVerified": true
+            }],
+            "memo_reference_code": "GEMAPLLV"})";
             callback(response);
           }));
 
-  balance_->Request("4c2b665ca060d912fec5c735c734859a06118cc8",
-                    [](const type::Result result, const double available) {
-                      EXPECT_EQ(result, type::Result::LEDGER_OK);
-                      EXPECT_EQ(available, 4.0);
-                    });
+  post_account_->Request(
+      "4c2b665ca060d912fec5c735c734859a06118cc8",
+      [](const type::Result result, const std::string address,
+         const std::string linking_info, const std::string user_name) {
+        EXPECT_EQ(result, type::Result::LEDGER_OK);
+        EXPECT_EQ(address, "Primary");
+        EXPECT_EQ(linking_info, "mocktoken");
+        EXPECT_EQ(user_name, "Test");
+      });
 }
 
-TEST_F(GetBalanceTest, ServerError401) {
+TEST_F(PostAccountGeminiTest, ServerError401) {
   ON_CALL(*mock_ledger_client_, LoadURL(_, _))
       .WillByDefault(Invoke(
           [](type::UrlRequestPtr request, client::LoadURLCallback callback) {
@@ -139,14 +89,18 @@ TEST_F(GetBalanceTest, ServerError401) {
             callback(response);
           }));
 
-  balance_->Request("4c2b665ca060d912fec5c735c734859a06118cc8",
-                    [](const type::Result result, const double available) {
-                      EXPECT_EQ(result, type::Result::EXPIRED_TOKEN);
-                      EXPECT_EQ(available, 0.0);
-                    });
+  post_account_->Request(
+      "4c2b665ca060d912fec5c735c734859a06118cc8",
+      [](const type::Result result, const std::string address,
+         const std::string linking_info, const std::string user_name) {
+        EXPECT_EQ(result, type::Result::EXPIRED_TOKEN);
+        EXPECT_EQ(address, "");
+        EXPECT_EQ(linking_info, "");
+        EXPECT_EQ(user_name, "");
+      });
 }
 
-TEST_F(GetBalanceTest, ServerErrorRandom) {
+TEST_F(PostAccountGeminiTest, ServerErrorRandom) {
   ON_CALL(*mock_ledger_client_, LoadURL(_, _))
       .WillByDefault(Invoke(
           [](type::UrlRequestPtr request, client::LoadURLCallback callback) {
@@ -157,11 +111,15 @@ TEST_F(GetBalanceTest, ServerErrorRandom) {
             callback(response);
           }));
 
-  balance_->Request("4c2b665ca060d912fec5c735c734859a06118cc8",
-                    [](const type::Result result, const double available) {
-                      EXPECT_EQ(result, type::Result::LEDGER_ERROR);
-                      EXPECT_EQ(available, 0.0);
-                    });
+  post_account_->Request(
+      "4c2b665ca060d912fec5c735c734859a06118cc8",
+      [](const type::Result result, const std::string address,
+         const std::string linking_info, const std::string user_name) {
+        EXPECT_EQ(result, type::Result::LEDGER_ERROR);
+        EXPECT_EQ(address, "");
+        EXPECT_EQ(linking_info, "");
+        EXPECT_EQ(user_name, "");
+      });
 }
 
 }  // namespace gemini

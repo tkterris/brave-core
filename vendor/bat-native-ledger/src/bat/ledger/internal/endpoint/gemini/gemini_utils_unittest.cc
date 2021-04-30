@@ -16,22 +16,46 @@ namespace gemini {
 
 class GeminiUtilsTest : public testing::Test {};
 
-TEST(GeminiUtilsTest, GetServerUrlDevelopment) {
+const kGeminiApiUrl = "https://api.gemini.com";
+const kGeminiSandboxApiUrl = "https://api.sandbox.gemini.com";
+
+const kGeminiOauthUrl = "https://exchange.gemini.com";
+const kGeminiSandboxOauthUrl = "https://exchange.sandbox.gemini.com";
+
+TEST(GeminiUtilsTest, GetApiServerUrlDevelopment) {
   ledger::_environment = type::Environment::DEVELOPMENT;
-  const std::string url = GetServerUrl("/test");
-  ASSERT_EQ(url, GEMINI_STAGING_URL "/test");
+  const std::string url = GetApiServerUrl("/test");
+  ASSERT_EQ(url, kGeminiSandboxApiUrl + "/test");
 }
 
-TEST(GeminiUtilsTest, GetServerUrlStaging) {
+TEST(GeminiUtilsTest, GetApiServerUrlStaging) {
   ledger::_environment = type::Environment::STAGING;
-  const std::string url = GetServerUrl("/test");
-  ASSERT_EQ(url, GEMINI_STAGING_URL "/test");
+  const std::string url = GetApiServerUrl("/test");
+  ASSERT_EQ(url, kGeminiSandboxApiUrl + "/test");
 }
 
-TEST(GeminiUtilsTest, GetServerUrlProduction) {
+TEST(GeminiUtilsTest, GetApiServerUrlProduction) {
   ledger::_environment = type::Environment::PRODUCTION;
-  const std::string url = GetServerUrl("/test");
-  ASSERT_EQ(url, "https://gemini.jp/test");
+  const std::string url = GetApiServerUrl("/test");
+  ASSERT_EQ(url, kGeminiApiUrl + "/test");
+}
+
+TEST(GeminiUtilsTest, GetOauthServerUrlDevelopment) {
+  ledger::_environment = type::Environment::DEVELOPMENT;
+  const std::string url = GetOauthServerUrl("/test");
+  ASSERT_EQ(url, kGeminiSandboxOauthUrl + "/test");
+}
+
+TEST(GeminiUtilsTest, GetOauthServerUrlStaging) {
+  ledger::_environment = type::Environment::STAGING;
+  const std::string url = GetOauthServerUrl("/test");
+  ASSERT_EQ(url, kGeminiSandboxOauthUrl + "/test");
+}
+
+TEST(GeminiUtilsTest, GetOauthServerUrlProduction) {
+  ledger::_environment = type::Environment::PRODUCTION;
+  const std::string url = GetOauthServerUrl("/test");
+  ASSERT_EQ(url, kGeminiOauthUrl + "/test");
 }
 
 }  // namespace gemini

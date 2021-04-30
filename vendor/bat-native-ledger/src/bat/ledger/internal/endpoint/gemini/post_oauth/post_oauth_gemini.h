@@ -10,19 +10,15 @@
 
 #include "bat/ledger/ledger.h"
 
-// POST https://gemini.jp/api/link/v1/token
+// POST https://exchange.sandbox.gemini.com/auth/token
 //
 // Request body:
 // {
-//   "client_id": "abcdedg",
-//   "client_secret": "xxxxxxxxxxxxxxxxxx",
-//   "code": "xxxxxxxxxxxxxxxxxxxxxxxxxx",
-//   "grant_type": "code",
-//   "code_verifier": "xxxxxxx",
-//   "expires_in": 3600,
-//   "external_account_id": "xxxxxxxxxx",
-//   "request_id": "xxxxxxxx",
-//   "request_deposit_id": true
+//   "client_id": "xxxxx",
+//   "client_secret": "yyyyy",
+//   "code": "aaaaa",
+//   "grant_type": "authorization_code",
+//   "redirect_uri": "rewards://gemini/authorization"
 // }
 //
 // Success code:
@@ -33,13 +29,11 @@
 //
 // Response body:
 // {
-//   "access_token": "xxxxbbbbccccddddeeeeqqqq",
-//   "refresh_token": "yyyyyyyyyyyyyyyyyyyyyyyyyy",
-//   "expires_in": 302010,
-//   "account_hash": "xxxxxxxxxxxxxxxxxx",
-//   "token_type": "Bearer",
-//   "deposit_id": "xxxxxxxxx",
-//   "linking_info": "xxxxx"
+//   "access_token": "aaaaa",
+//   "expires_in": 83370,
+//   "scope": "account:read,addresses:create,balances:read,orders:create,orders:read,payments:create,payments:read,payments:send",
+//   "refresh_token":"bbbbb",
+//   "token_type": "Bearer"
 // }
 
 namespace ledger {

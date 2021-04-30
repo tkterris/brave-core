@@ -45,9 +45,9 @@ type::Result PostAccount::CheckStatusCode(const int status_code) {
 }
 
 type::Result PostAccount::ParseBody(const std::string& body,
-                                   std::string* address,
-                                   std::string* linking_info,
-                                   std::string* user_name) {
+                                    std::string* address,
+                                    std::string* linking_info,
+                                    std::string* user_name) {
   DCHECK(address);
   DCHECK(linking_info);
   DCHECK(user_name);
@@ -108,7 +108,7 @@ type::Result PostAccount::ParseBody(const std::string& body,
 }
 
 void PostAccount::Request(const std::string& token,
-                         PostAccountCallback callback) {
+                          PostAccountCallback callback) {
   auto url_callback = std::bind(&PostAccount::OnRequest, this, _1, callback);
   auto request = type::UrlRequest::New();
   request->url = GetUrl();
@@ -118,7 +118,7 @@ void PostAccount::Request(const std::string& token,
 }
 
 void PostAccount::OnRequest(const type::UrlResponse& response,
-                           PostAccountCallback callback) {
+                            PostAccountCallback callback) {
   ledger::LogUrlResponse(__func__, response);
 
   type::Result result = CheckStatusCode(response.status_code);

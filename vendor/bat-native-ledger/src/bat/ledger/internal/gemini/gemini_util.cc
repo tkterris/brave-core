@@ -12,8 +12,8 @@
 #include "base/strings/string_util.h"
 #include "base/strings/stringprintf.h"
 #include "bat/ledger/global_constants.h"
-#include "bat/ledger/internal/gemini/gemini_util.h"
 #include "bat/ledger/internal/common/random_util.h"
+#include "bat/ledger/internal/gemini/gemini_util.h"
 #include "bat/ledger/internal/ledger_impl.h"
 #include "bat/ledger/internal/state/state_keys.h"
 #include "crypto/random.h"
@@ -238,8 +238,7 @@ type::ExternalWalletPtr GenerateLinks(type::ExternalWalletPtr wallet) {
     }
   }
 
-  const std::string auth_url =
-      GetAuthorizeUrl(wallet->one_time_string);
+  const std::string auth_url = GetAuthorizeUrl(wallet->one_time_string);
 
   wallet->verify_url = auth_url;
   wallet->account_url = GetAccountUrl();

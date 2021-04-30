@@ -21,8 +21,7 @@ PromotionServer::PromotionServer(LedgerImpl* ledger)
           std::make_unique<promotion::GetRecoverWallet>(ledger)),
       post_claim_bitflyer_(
           std::make_unique<promotion::PostClaimBitflyer>(ledger)),
-      post_claim_gemini_(
-          std::make_unique<promotion::PostClaimGemini>(ledger)),
+      post_claim_gemini_(std::make_unique<promotion::PostClaimGemini>(ledger)),
       post_claim_uphold_(std::make_unique<promotion::PostClaimUphold>(ledger)),
       get_wallet_balance_(
           std::make_unique<promotion::GetWalletBalance>(ledger)),

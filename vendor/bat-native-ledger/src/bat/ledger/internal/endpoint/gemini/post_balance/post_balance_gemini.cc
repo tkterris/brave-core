@@ -44,7 +44,8 @@ type::Result PostBalance::CheckStatusCode(const int status_code) {
   return type::Result::LEDGER_OK;
 }
 
-type::Result PostBalance::ParseBody(const std::string& body, double* available) {
+type::Result PostBalance::ParseBody(const std::string& body,
+                                    double* available) {
   DCHECK(available);
 
   base::Optional<base::Value> value = base::JSONReader::Read(body);
@@ -59,7 +60,7 @@ type::Result PostBalance::ParseBody(const std::string& body, double* available) 
     return type::Result::LEDGER_ERROR;
   }
 
-  for (auto&& balance: balances->GetList()) {
+  for (auto&& balance : balances->GetList()) {
     const auto* currency_code = balance.FindStringKey("currency");
     if (!currency_code || *currency_code != "BAT") {
       continue;
@@ -70,9 +71,9 @@ type::Result PostBalance::ParseBody(const std::string& body, double* available) 
       BLOG(0, "Missing available");
       return type::Result::LEDGER_ERROR;
     }
-    
-    const bool result = base::StringToDouble(base::StringPiece(*available_value),
-                                             available);
+
+    const bool result =
+        base::StringToDouble(base::StringPiece(*available_value), available);
     if (!result) {
       BLOG(0, "Invalid balance");
       return type::Result::LEDGER_ERROR;
@@ -86,7 +87,7 @@ type::Result PostBalance::ParseBody(const std::string& body, double* available) 
 }
 
 void PostBalance::Request(const std::string& token,
-                         PostBalanceCallback callback) {
+                          PostBalanceCallback callback) {
   auto url_callback = std::bind(&PostBalance::OnRequest, this, _1, callback);
   auto request = type::UrlRequest::New();
   request->url = GetUrl();
@@ -96,7 +97,7 @@ void PostBalance::Request(const std::string& token,
 }
 
 void PostBalance::OnRequest(const type::UrlResponse& response,
-                           PostBalanceCallback callback) {
+                            PostBalanceCallback callback) {
   ledger::LogUrlResponse(__func__, response);
 
   type::Result result = CheckStatusCode(response.status_code);

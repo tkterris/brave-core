@@ -6,9 +6,9 @@
 #include <utility>
 
 #include "bat/ledger/global_constants.h"
+#include "bat/ledger/internal/common/random_util.h"
 #include "bat/ledger/internal/gemini/gemini_util.h"
 #include "bat/ledger/internal/gemini/gemini_wallet.h"
-#include "bat/ledger/internal/common/random_util.h"
 #include "bat/ledger/internal/ledger_impl.h"
 #include "bat/ledger/internal/logging/event_log_keys.h"
 

@@ -30,11 +30,11 @@ class GeminiAuthorization {
 
  private:
   void OnPostAccount(const type::Result result,
-                    const std::string& token,
-                    const std::string& address,
-                    const std::string& linking_info,
-                    const std::string& name,
-                    ledger::ExternalWalletAuthorizationCallback callback);
+                     const std::string& token,
+                     const std::string& address,
+                     const std::string& linking_info,
+                     const std::string& name,
+                     ledger::ExternalWalletAuthorizationCallback callback);
 
   void OnAuthorize(const type::Result result,
                    const std::string& token,

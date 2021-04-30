@@ -812,8 +812,8 @@ void CustomizeWebUIHTMLSource(const std::string &name,
         { "walletConnectButtonText", IDS_BRAVE_UI_WALLET_CONNECT_BUTTON_TEXT },
         { "walletConnectMessage", IDS_BRAVE_UI_WALLET_CONNECT_MESSAGE },
         { "walletConnectNote", IDS_BRAVE_UI_WALLET_CONNECT_NOTE },
-        { "walletConnectReconnectLink", IDS_BRAVE_UI_WALLET_CONNECT_RECONNECT_LINK },
-        { "walletConnectReconnectText", IDS_BRAVE_UI_WALLET_CONNECT_RECONNECT_TEXT },
+        { "walletConnectReconnectLink", IDS_BRAVE_UI_WALLET_CONNECT_RECONNECT_LINK },  // NOLINT
+        { "walletConnectReconnectText", IDS_BRAVE_UI_WALLET_CONNECT_RECONNECT_TEXT },  // NOLINT
         { "walletConnectTitle", IDS_BRAVE_UI_WALLET_CONNECT_TITLE },
         { "walletButtonDisconnected", IDS_BRAVE_UI_WALLET_BUTTON_DISCONNECTED },
         { "walletButtonUnverified", IDS_BRAVE_UI_WALLET_BUTTON_UNVERIFIED },
@@ -825,8 +825,8 @@ void CustomizeWebUIHTMLSource(const std::string &name,
         { "walletSelectTitle", IDS_BRAVE_UI_WALLET_SELECT_TITLE },
         { "walletSelectText", IDS_BRAVE_UI_WALLET_SELECT_TEXT },
         { "walletSelectUphold", IDS_BRAVE_UI_WALLET_SELECT_UPHOLD },
-        { "walletSelectUpholdMessage", IDS_BRAVE_UI_WALLET_SELECT_UPHOLD_MESSAGE },
-        { "walletSelectUpholdMessageLink", IDS_BRAVE_UI_WALLET_SELECT_UPHOLD_MESSAGE_LINK },
+        { "walletSelectUpholdMessage", IDS_BRAVE_UI_WALLET_SELECT_UPHOLD_MESSAGE },  // NOLINT
+        { "walletSelectUpholdMessageLink", IDS_BRAVE_UI_WALLET_SELECT_UPHOLD_MESSAGE_LINK }, // NOLINT
         { "walletVerificationButton", IDS_BRAVE_UI_WALLET_VERIFICATION_BUTTON },
         { "walletVerificationFooter", IDS_BRAVE_UI_WALLET_VERIFICATION_FOOTER },
         { "walletVerificationID", IDS_BRAVE_UI_WALLET_VERIFICATION_ID },
