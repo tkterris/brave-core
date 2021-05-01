@@ -91,6 +91,9 @@ const test = (passthroughArgs, suite, buildConfig = config.defaultBuildConfig, o
         // Specify emulator to run tests on
         braveArgs.push(`--avd-config tools/android/avd/proto/generic_android28.textpb`)
       }
+      if (suite === 'brave_browser_tests' && process.platform === 'win32') {
+        braveArgs.push(`--disable-gpu`)
+      }
       util.run(path.join(config.outputDir, getTestBinary(testSuite)), braveArgs, config.defaultOptions)
     })
   }
