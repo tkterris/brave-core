@@ -5,6 +5,7 @@
 
 package org.chromium.chrome.browser.toolbar.bottom;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 
 import org.chromium.base.ApiCompatibilityUtils;
+import org.chromium.base.ContextUtils;
 import org.chromium.base.supplier.ObservableSupplier;
 import org.chromium.base.supplier.OneShotCallback;
 import org.chromium.chrome.R;
@@ -20,6 +22,7 @@ import org.chromium.chrome.browser.theme.ThemeColorProvider;
 import org.chromium.chrome.browser.toolbar.TabCountProvider;
 import org.chromium.chrome.browser.toolbar.menu_button.MenuButton;
 import org.chromium.chrome.browser.ui.appmenu.AppMenuButtonHelper;
+import org.chromium.chrome.browser.util.TabUtils;
 import org.chromium.ui.modelutil.PropertyModelChangeProcessor;
 
 /**
@@ -28,7 +31,7 @@ import org.chromium.ui.modelutil.PropertyModelChangeProcessor;
  * TODO(crbug.com/1036474): This coordinator is not used currently and can be removed if the final
  *                          duet design doesn't need a stand-alone toolbar in tab switcher mode.
  */
-public class TabSwitcherBottomToolbarCoordinator {
+public class TabSwitcherBottomToolbarCoordinator implements View.OnLongClickListener {
     /** The mediator that handles events from outside the tab switcher bottom toolbar. */
     private final TabSwitcherBottomToolbarMediator mMediator;
 
@@ -40,6 +43,8 @@ public class TabSwitcherBottomToolbarCoordinator {
 
     /** The model for the tab switcher bottom toolbar that holds all of its state. */
     private final TabSwitcherBottomToolbarModel mModel;
+
+    private final Context mContext = ContextUtils.getApplicationContext();
 
     /**
      * Build the coordinator that manages the tab switcher bottom toolbar.
@@ -81,6 +86,7 @@ public class TabSwitcherBottomToolbarCoordinator {
         background.mutate();
         mNewTabButton.setBackground(background);
         mNewTabButton.setOnClickListener(newTabClickListener);
+        mNewTabButton.setOnLongClickListener(this);
         mNewTabButton.setIncognitoStateProvider(incognitoStateProvider);
         mNewTabButton.setThemeColorProvider(themeColorProvider);
 
@@ -90,6 +96,18 @@ public class TabSwitcherBottomToolbarCoordinator {
             assert menuButtonHelper != null;
             mMenuButton.setAppMenuButtonHelper(menuButtonHelper);
         });
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        String description = "";
+
+        if (v == mNewTabButton) {
+            TabUtils.showTabPopupMenu(mContext, v);
+            return true;
+        }
+
+        return Toast.showAnchoredToast(mContext, v, description);
     }
 
     /**
